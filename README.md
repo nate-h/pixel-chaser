@@ -1,12 +1,13 @@
 # algorithmicdrawing
 Draws pictures using alogithms
 
-## Based on:
+
+## Based on
 The idea for this came from this https://www.michaelbromley.co.uk/experiments/chromata/
 Without looking at the code, I wanted to create something similar.
 
 
-## Plan for creating:
+## Plan for creating
 * Take an image and scale down/scale up the original image so that the dimensions are 200*150.
 * Break down image into rgb colors matrix
 * Grab N random points in that rgb matrix
