@@ -1,0 +1,27 @@
+{
+  "name": "Algorithmic-Drawing",
+  "version": "1.0.0",
+  "description": "Draws a picture using a graph traversal algorithm",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Algorithmic",
+    "Canvas",
+    "Drawing",
+    "DFS",
+    "Depth-First Search"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-sass": "^2.0.0",
+    "node-bourbon": "^4.2.3"
+  }
+}
