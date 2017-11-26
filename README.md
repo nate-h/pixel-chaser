@@ -1,4 +1,4 @@
-# algorithmic drawing
+# Algorithmic Drawing
 Draws pictures using alogithms
 
 
@@ -16,3 +16,4 @@ Without looking at the code, I wanted to create something similar.
 * Have speed at which I traverse nodes
 * Traverse nodes based on which nodes is light/darkest or whatever metric I choose
 * Keep traversing nodes until all nodes are visited
+* A click restart it
