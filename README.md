@@ -1,4 +1,4 @@
-# algorithmicdrawing
+# algorithmic drawing
 Draws pictures using alogithms
 
 
