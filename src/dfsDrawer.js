@@ -37,6 +37,8 @@ class DfsDrawer
 
 
         this.grayScale();
+
+        this.findDarkestNeighbor(0);
     }
 
     clearRect()
@@ -81,19 +83,62 @@ class DfsDrawer
         return x + y * this.canvasW;
     }
 
+    indexColorSum(index)
+    {
+        var realIndex = index*4;
+        var sum = this.data[realIndex] + this.data[realIndex + 1] + this.data[realIndex + 2];
+        return sum*this.data[realIndex + 3];
+    }
+
     findDarkestNeighbor(index)
     {
         var xyTuple = this.indexToXY(index);
         var chosenDirection =  null;
         var minSum = null;
+        var colorSum = null;
+        var tempIndex = null;
 
         // Get colors value for each of neighbors
 
         // Check top
-
+        var xTop = xyTuple.x;
+        var yTop = xyTuple.y - 1;
+        //var tempIndex = this.xyToIndex(xTop, yTop);
+        if(yTop >= 0)
+        {
+            tempIndex = this.xyToIndex(xTop, yTop);
+            colorSum = this.indexColorSum(tempIndex);
+            console.log(colorSum);
+        }
 
         // Check bottom
+        var xBottom = xyTuple.x;
+        var yBottom = xyTuple.y + 1;
+        if(yBottom < this.canvasH)
+        {
+            tempIndex = this.xyToIndex(xBottom, yBottom);
+            colorSum = this.indexColorSum(tempIndex);
+            console.log(colorSum);
+        }
+
         // Check left
+        var xLeft = xyTuple.x - 1;
+        var yLeft = xyTuple.y;
+        if(xLeft >= 0)
+        {
+            tempIndex = this.xyToIndex(xLeft, yLeft);
+            colorSum = this.indexColorSum(tempIndex);
+            console.log(colorSum);
+        }
+
         // Check right
+        var xRight = xyTuple.x + 1;
+        var yRight = xyTuple.y;
+        if(xRight < this.canvasW)
+        {
+            tempIndex = this.xyToIndex(xRight, yRight);
+            colorSum = this.indexColorSum(tempIndex);
+            console.log(colorSum);
+        }
     }
 }
