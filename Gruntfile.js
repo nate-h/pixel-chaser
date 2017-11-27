@@ -35,10 +35,12 @@ module.exports = function(grunt) {
         concat: {
             options: {
                 separator: ';',
+                sourceMap: true,
             },
             dist: {
                 src: [
                     'src/main.js',
+                    'src/dfsDrawer.js',
                 ],
                 dest: 'build/main.js',
             },
