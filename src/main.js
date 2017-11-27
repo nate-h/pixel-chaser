@@ -7,7 +7,7 @@ window.onload = function()
     var t0 = performance.now();
 
     // Start to draw image.
-    var imageElement = new Image();
+    var imageElement = new Image(200, 200);
     var dfsDrawer = null;
     imageElement.src = "assets/myFace.jpg";
     imageElement.onload = function(){
