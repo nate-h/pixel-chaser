@@ -2,4 +2,10 @@
 // main.js
 ////////////////////////////////////////////////////////////////////////////////
 
-console.log("Main Called!");
+console.log("Main Calledddddddddddd!");
+
+var c = document.getElementById("dfsDrawer");
+var ctx = c.getContext("2d");
+ctx.moveTo(0,0);
+ctx.lineTo(200, 150);
+ctx.stroke();

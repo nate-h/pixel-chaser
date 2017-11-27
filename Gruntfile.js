@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         clean: [
-            // 'build/*',
+            'build/*',
         ],
 
         sass: {
@@ -22,16 +22,19 @@ module.exports = function(grunt) {
             },
         },
 
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js'
-            }
+        copy: {
+          main: {
+            files: [
+              // includes files within path
+              {expand: true, flatten: true, src: ['src/index.html'], dest: 'build/', filter: 'isFile'},
+              {expand: true, flatten: true, src: ['src/assets/*'], dest: 'build/assets', filter: 'isFile'},
+            ],
+          },
         },
 
         concat: {
             options: {
                 separator: ';',
-                sourceMap: true,
             },
             dist: {
                 src: [
@@ -42,16 +45,23 @@ module.exports = function(grunt) {
         },
 
         watch: {
+            copy: {
+                files: ['src/index.html'],
+                tasks: ['copy']
+            },
             sass: {
-                files: [ '**/*.scss', '!node_modules/**' ],
+                files: [ '**/*.scss', '!node_modules/**', '!build/**' ],
                 tasks: ['sass']
             },
             js: {
-                files: ['**/*.js', '!node_modules/**', '!docs/**', '!Gruntfile.js'],
+                files: ['src/**.js', '!node_modules/**', '!Gruntfile.js'],
                 tasks: ['concat'],
             },
             options: {
-                livereload: true
+                livereload: {
+                    host: 'localhost',
+                    port: 9000,
+                },
             }
         },
 
@@ -62,11 +72,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Default task(s).
-    grunt.registerTask('default', ['clean', 'sass', 'concat']);
+    grunt.registerTask('default', ['clean', 'copy', 'sass', 'concat']);
     grunt.registerTask('js',      ['concat']);
-    grunt.registerTask('watch',   ['watch']);
+    grunt.registerTask('dev',     ['default', 'watch']);
 
 };
