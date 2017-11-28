@@ -1,5 +1,5 @@
 # Algorithmic Drawing
-Draws pictures using alogithms
+Draws pictures using algorithms
 
 
 ## Based on
@@ -17,3 +17,8 @@ Without looking at the code, I wanted to create something similar.
 * Traverse nodes based on which nodes is light/darkest or whatever metric I choose
 * Keep traversing nodes until all nodes are visited
 * A click restart it
+
+
+# IDEAS?
+Add noise to influence direction.
+Use multiple filters at once.

@@ -36,18 +36,22 @@ class DfsDrawer
         for (var i = 0; i < this.visited.length; ++i)
             this.visited[i] = false;
 
-
-        this.grayScale();
+        this.clear();
     }
 
-    clearRect()
+    draw()
+    {
+
+    }
+
+    clear()
     {
         this.ctx.clearRect(0,0, this.canvasW, this.canvasH);
     }
 
     drawImage()
     {
-        this.clearRect();
+        this.clear();
         this.ctx.putImageData(this.imageData, 0, 0);
     }
 

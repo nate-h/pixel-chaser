@@ -12,6 +12,7 @@ window.onload = function()
     imageElement.src = "assets/myFace.jpg";
     imageElement.onload = function(){
         dfsDrawer = new DfsDrawer(imageElement);
+        dfsDrawer.draw();
     };
 
     var t1 = performance.now();
