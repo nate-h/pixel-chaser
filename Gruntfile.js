@@ -59,12 +59,6 @@ module.exports = function(grunt) {
                 files: ['src/**.js', '!node_modules/**', '!Gruntfile.js'],
                 tasks: ['concat'],
             },
-            options: {
-                livereload: {
-                    host: 'localhost',
-                    port: 9000,
-                },
-            }
         },
 
     });

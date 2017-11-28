@@ -4,12 +4,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 // Helper functions
-var Direction = {
-    "Top": 0,
-    "Down": 1,
-    "Left": 2,
-    "Right": 3,
-};
+var NeighborsDefinitions =
+[
+    {"direction": "Top", "x": 0, "y": -1},
+    {"direction": "Down", "x": 0, "y": 1},
+    {"direction": "Left", "x": -1, "y": 0},
+    {"direction": "Right", "x": 1, "y": 0},
+];
 
 class DfsDrawer
 {
@@ -37,8 +38,6 @@ class DfsDrawer
 
 
         this.grayScale();
-
-        this.findDarkestNeighbor(0);
     }
 
     clearRect()
@@ -80,6 +79,8 @@ class DfsDrawer
     // translates row, column to index
     xyToIndex(x, y)
     {
+        if(x < 0 || y < 0 || x >= this.canvasW || y >= this.canvasH)
+            return -1;
         return x + y * this.canvasW;
     }
 
@@ -87,7 +88,8 @@ class DfsDrawer
     {
         var realIndex = index*4;
         var sum = this.data[realIndex] + this.data[realIndex + 1] + this.data[realIndex + 2];
-        return sum*this.data[realIndex + 3];
+        return sum;
+        //return sum*(255 - this.data[realIndex + 3]);
     }
 
     findDarkestNeighbor(index)
@@ -95,50 +97,27 @@ class DfsDrawer
         var xyTuple = this.indexToXY(index);
         var chosenDirection =  null;
         var minSum = null;
-        var colorSum = null;
-        var tempIndex = null;
 
         // Get colors value for each of neighbors
-
-        // Check top
-        var xTop = xyTuple.x;
-        var yTop = xyTuple.y - 1;
-        //var tempIndex = this.xyToIndex(xTop, yTop);
-        if(yTop >= 0)
+        for(var dirIndex in NeighborsDefinitions)
         {
-            tempIndex = this.xyToIndex(xTop, yTop);
-            colorSum = this.indexColorSum(tempIndex);
-            console.log(colorSum);
+            let neighborsDef = NeighborsDefinitions[dirIndex];
+            let x = neighborsDef.x + xyTuple.x;
+            let y = neighborsDef.y + xyTuple.x;
+            let tempIndex = this.xyToIndex(x, y);
+
+            if(tempIndex < 0)
+                continue;
+
+            let colorSum = this.indexColorSum(tempIndex);
+
+            if(minSum === null || colorSum < minSum)
+            {
+                minSum = colorSum;
+                chosenDirection = neighborsDef.direction;
+            }
         }
 
-        // Check bottom
-        var xBottom = xyTuple.x;
-        var yBottom = xyTuple.y + 1;
-        if(yBottom < this.canvasH)
-        {
-            tempIndex = this.xyToIndex(xBottom, yBottom);
-            colorSum = this.indexColorSum(tempIndex);
-            console.log(colorSum);
-        }
-
-        // Check left
-        var xLeft = xyTuple.x - 1;
-        var yLeft = xyTuple.y;
-        if(xLeft >= 0)
-        {
-            tempIndex = this.xyToIndex(xLeft, yLeft);
-            colorSum = this.indexColorSum(tempIndex);
-            console.log(colorSum);
-        }
-
-        // Check right
-        var xRight = xyTuple.x + 1;
-        var yRight = xyTuple.y;
-        if(xRight < this.canvasW)
-        {
-            tempIndex = this.xyToIndex(xRight, yRight);
-            colorSum = this.indexColorSum(tempIndex);
-            console.log(colorSum);
-        }
+        return chosenDirection;
     }
 }
