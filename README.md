@@ -22,3 +22,4 @@ Without looking at the code, I wanted to create something similar.
 # IDEAS?
 Add noise to influence direction.
 Use multiple filters at once.
+Every so often branch off and start new independent path?

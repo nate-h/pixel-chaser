@@ -31,17 +31,48 @@ class DfsDrawer
         this.imageData = this.ctx.getImageData(0, 0, this.imgW, this.imgH);
         this.data = new Uint8ClampedArray(this.imageData.data);
 
+        console.log('this.data', this.data);
+
         // Initialize array of visited nodes
         this.visited = new Array(this.canvasW * this.canvasH);
         for (var i = 0; i < this.visited.length; ++i)
             this.visited[i] = false;
 
         this.clear();
+
+        for(var pixelIndex in this.imageData.data)
+        {
+            this.imageData.data[pixelIndex] = 255;
+        }
     }
 
     draw()
     {
+        var count = 0;
+        var numPixels = this.canvasW*this.canvasH;
 
+        var intervalFn = function()
+        {
+
+            for(var i =0; i< 100; ++i, count++)
+            {
+                this.imageData.data[4*count + 0] = this.data[4*count + 0];
+                this.imageData.data[4*count + 1] = this.data[4*count + 1];
+                this.imageData.data[4*count + 2] = this.data[4*count + 2];
+
+                if(count >= numPixels)
+                {
+                    clearInterval(timerID);
+                    console.log("stopped");
+                }
+
+            }
+
+            this.drawImage();
+
+        }.bind(this);
+
+        var timerID = setInterval(intervalFn, 10);
     }
 
     clear()
