@@ -12,6 +12,13 @@ var NeighborsDefinitions =
     {"direction": "Right", "x": 1, "y": 0},
 ];
 
+var NodeStates =
+{
+    "Unvisited": 0,
+    "Visited": 1,
+    "Done": 2,
+};
+
 class DfsDrawer
 {
     constructor(imageElement)
@@ -19,6 +26,8 @@ class DfsDrawer
         this.imageElement = imageElement;
         this.imgW = this.imageElement.width;
         this.imgH = this.imageElement.height;
+        this.maxIters = 100;
+        this.leadIndexes = [0];
 
         // Create a Canvas element
         var canvas = document.getElementById("dfsDrawer");
@@ -31,30 +40,31 @@ class DfsDrawer
         this.imageData = this.ctx.getImageData(0, 0, this.imgW, this.imgH);
         this.data = new Uint8ClampedArray(this.imageData.data);
 
-        console.log('this.data', this.data);
-
         // Initialize array of visited nodes
-        this.visited = new Array(this.canvasW * this.canvasH);
-        for (var i = 0; i < this.visited.length; ++i)
-            this.visited[i] = false;
+        this.nodesStates = new Array(this.canvasW * this.canvasH);
+        for (var i = 0; i < this.nodesStates.length; ++i)
+            this.nodesStates[i] = NodeStates.Unvisited;
 
+        // Clear Canvas and Set image data to have white pixels.
         this.clear();
-
         for(var pixelIndex in this.imageData.data)
-        {
             this.imageData.data[pixelIndex] = 255;
-        }
     }
 
     draw()
     {
+
+        return;
+
         var count = 0;
+        var iterCount = 0;
         var numPixels = this.canvasW*this.canvasH;
 
         var intervalFn = function()
         {
 
-            for(var i =0; i< 100; ++i, count++)
+            /*
+            for(var i = 0; i < this.maxIters; ++i, ++count)
             {
                 this.imageData.data[4*count + 0] = this.data[4*count + 0];
                 this.imageData.data[4*count + 1] = this.data[4*count + 1];
@@ -65,10 +75,39 @@ class DfsDrawer
                     clearInterval(timerID);
                     console.log("stopped");
                 }
-
             }
+            */
+
+           // Iterate over each lead index
+           // Mark it as visited
+           // If all neighbors are visited or done, mark as done.
+           // Attempt to move to unvisted.
+           // Else backtrack on visited.
+           // If all neighbors are done, destroy self.
+
+           for(var leadIter in this.leadIndexes)
+           {
+               var leadIndex = this.leadIndexes[leadIter];
+               var nodeState = getIndexNodeState(leadIndex);
+
+               if(nodeState === NodeStates.Unvisited)
+                    markIndex(leadIndex, NodeStates.Visited);  // TODO mark index needs to set pixel colors.
+
+                // Find darkest neighbor that hasn't been visited yet.
+                var nextDarkestIndex = this.findDarkestNeighbor(leadIndex, "unvisted");
+
+                var nextDarkestIndex2 = this.findDarkestNeighbor(leadIndex, "visted");
+
+                if(nextDarkestIndex2){markIndex(leadIndex, NodeStates.Done);}
+           }
 
             this.drawImage();
+
+            if(++iterCount >= this.maxIters)
+            {
+                clearInterval(timerID);
+                console.log("done stopped");
+            }
 
         }.bind(this);
 
