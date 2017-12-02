@@ -74,7 +74,7 @@ class DfsDrawer
                 // Find darkest Neighbor that hasn't been visited yet.
                 var nextDarkestIndex = this.findDarkestNeighbor(myIndex, NodeStates.Unvisited);
 
-                // Remove my index and replace with this one.
+                // Move onto this index and process it now.
                 if(nextDarkestIndex !== null)
                 {
                     this.leadIndexes[leadIter] = nextDarkestIndex;
@@ -172,7 +172,7 @@ class DfsDrawer
         this.imageData.data[4*index + 2] = this.data[4*index + 2];
     }
 
-    indexColorSum(index)
+    colorSumAtIndex(index)
     {
         var realIndex = index*4;
         var sum = this.data[realIndex] + this.data[realIndex + 1] + this.data[realIndex + 2];
@@ -192,22 +192,22 @@ class DfsDrawer
             let neighborsDef = NeighborsDefinitions[dirIndex];
             let x = neighborsDef.x + xyTuple.x;
             let y = neighborsDef.y + xyTuple.y;
-            let tempIndex = this.xyToIndex(x, y);
+            let neighborIndex = this.xyToIndex(x, y);
 
             // Test if valid index. Happens for edge nodes.
-            if(tempIndex < 0)
+            if(neighborIndex < 0)
                 continue;
 
             // Test if neighbor has target node state.
-            if(this.getNodeState(tempIndex) !== needsNodeState)
+            if(this.getNodeState(neighborIndex) !== needsNodeState)
                 continue;
 
-            let colorSum = this.indexColorSum(tempIndex);
+            let colorSum = this.colorSumAtIndex(neighborIndex);
 
             if(minSum === null || colorSum < minSum)
             {
                 minSum = colorSum;
-                chosenIndex = tempIndex;
+                chosenIndex = neighborIndex;
             }
         }
 
@@ -226,22 +226,22 @@ class DfsDrawer
             let neighborsDef = NeighborsDefinitions[dirIndex];
             let x = neighborsDef.x + xyTuple.x;
             let y = neighborsDef.y + xyTuple.y;
-            let tempIndex = this.xyToIndex(x, y);
+            let neighborIndex = this.xyToIndex(x, y);
 
             // Test if valid index. Happens for edge nodes.
-            if(tempIndex < 0)
+            if(neighborIndex < 0)
                 continue;
 
             // Test if neighbor has target node state.
-            if(this.getNodeState(tempIndex) !== needsNodeState)
+            if(this.getNodeState(neighborIndex) !== needsNodeState)
                 continue;
 
-            let colorSum = this.indexColorSum(tempIndex);
+            let colorSum = this.colorSumAtIndex(neighborIndex);
 
             if(maxSum === null || colorSum >= maxSum)
             {
                 maxSum = colorSum;
-                chosenIndex = tempIndex;
+                chosenIndex = neighborIndex;
             }
         }
 
@@ -264,14 +264,14 @@ class DfsDrawer
             let neighborsDef = NeighborsDefinitions[dirIndex];
             let x = neighborsDef.x + xyTuple.x;
             let y = neighborsDef.y + xyTuple.y;
-            let tempIndex = this.xyToIndex(x, y);
+            let neighborIndex = this.xyToIndex(x, y);
 
             // Test if valid index. Happens for edge nodes.
-            if(tempIndex < 0)
+            if(neighborIndex < 0)
                 continue;
 
-            let colorSum = this.indexColorSum(tempIndex);
-            let nodeStateString = this.nodeStateAsString(this.getNodeState(tempIndex));
+            let colorSum = this.colorSumAtIndex(neighborIndex);
+            let nodeStateString = this.nodeStateAsString(this.getNodeState(neighborIndex));
 
             console.log(neighborsDef.direction, " State: ", nodeStateString, " Sum: ", colorSum);
         }
