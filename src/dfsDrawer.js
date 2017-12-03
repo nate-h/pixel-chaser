@@ -23,6 +23,7 @@ class DfsDrawer
 {
     constructor(imageElement)
     {
+        return;
         // Create a Canvas element
         var canvas = document.getElementById("dfsDrawer");
         this.canvasW = canvas.width;
@@ -32,7 +33,8 @@ class DfsDrawer
         this.imgW = this.imageElement.width;
         this.imgH = this.imageElement.height;
         this.maxIters = canvas.width * canvas.height;
-        this.leadIndexes = [0];
+        this.leadIndexes = [];
+        this.generateStartingPoints();
         this.markSum = null;   // TODO make this work. Count number of nodes mark as visited.
         var i = null;
 
@@ -55,6 +57,14 @@ class DfsDrawer
         this.clear();
         for(var pixelIndex in this.imageData.data)
         this.imageData.data[pixelIndex] = 255;
+    }
+
+    generateStartingPoints()
+    {
+        this.leadIndexes.push(0);
+        this.leadIndexes.push(this.canvasW-1);
+        this.leadIndexes.push(this.canvasW * this.canvasH -1);
+        this.leadIndexes.push((this.canvasW-1)*this.canvasH-1);
     }
 
     draw()
@@ -118,7 +128,9 @@ class DfsDrawer
             return;
         }
         else
-            debugger;
+        {
+            console.log("end found");
+        }
     }
 
     clear()
@@ -204,33 +216,29 @@ class DfsDrawer
     colorSumAtIndex(index)
     {
         var realIndex = index*4;
-        var sum = this.data[realIndex] + this.data[realIndex + 1] + this.data[realIndex + 2];
-        return sum;
+        var r = this.data[realIndex + 0];
+        var g = this.data[realIndex + 1];
+        var b = this.data[realIndex + 2];
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
         //return sum*(255 - this.data[realIndex + 3]);
     }
 
-    allNeighborsVisited(index)
-    {
-        var xyTuple = this.indexToXY(index);
-
-        // Get colors value for each of neighbors
-        for(var dirIndex in NeighborsDefinitions)
+    shuffleArray(a) {
+        for(let i = a.length - 1; i > 0; --i)
         {
-            let neighborsDef = NeighborsDefinitions[dirIndex];
-            let x = neighborsDef.x + xyTuple.x;
-            let y = neighborsDef.y + xyTuple.y;
-            let neighborIndex = this.xyToIndex(x, y);
-
-            // Test if valid index. Happens for edge nodes.
-            if(neighborIndex < 0)
-                continue;
-
-            // Test if neighbor has target node state.
-            if(this.getNodeState(neighborIndex) === NodeStates.Unvisited)
-                return false;
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
         }
+        return a;
+    }
 
-        return true;
+    findUnvisitedIndex()
+    {
+        var unshuffledArray = new Array(this.canvasH);
+        for(var i = 0; i < 100; i++)
+            unshuffledArray[i] = i;
+        var shuffled = this.shuffleArray(unshuffledArray);
+        console.log(shuffled);
     }
 
     backTrack(index)
@@ -259,6 +267,10 @@ class DfsDrawer
             if(this.oppositeDirection(this.backtrackStates[neighborIndex]) === neighborsDef.direction)
                 return neighborIndex;
         }
+
+        console.log("end found");
+        return null;
+
     }
 
     findDarkestNeighbor(index, needsNodeState)
