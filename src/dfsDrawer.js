@@ -23,7 +23,6 @@ class DfsDrawer
 {
     constructor(imageElement)
     {
-        return;
         // Create a Canvas element
         var canvas = document.getElementById("dfsDrawer");
         this.canvasW = canvas.width;
@@ -39,6 +38,16 @@ class DfsDrawer
         var i = null;
 
 
+        this.randomizedRowIndexes = new Array(this.canvasH);
+        for(i = 0; i < this.canvasH; i++)
+            this.randomizedRowIndexes[i] = i;
+        this.randomizedRowIndexes = this.shuffleArray(this.randomizedRowIndexes);
+
+        this.randomizedColumnIndexes = new Array(this.canvasW);
+        for(i = 0; i < this.canvasW; i++)
+            this.randomizedColumnIndexes[i] = i;
+        this.randomizedColumnIndexes = this.shuffleArray(this.randomizedColumnIndexes);
+
         // Draw image on canvas and capture canvas as 1-d array of color values
         this.ctx = canvas.getContext('2d');
         this.ctx.drawImage(this.imageElement, 0, 0, this.canvasW, this.canvasH);
@@ -48,15 +57,15 @@ class DfsDrawer
         // Creates arrays for visited status and for backtracing.
         this.nodesStates = new Array(this.canvasW * this.canvasH);
         for(i = 0; i < this.nodesStates.length; ++i)
-        this.nodesStates[i] = NodeStates.Unvisited;
+            this.nodesStates[i] = NodeStates.Unvisited;
         this.backtrackStates = new Array(this.canvasW * this.canvasH);
         for(i = 0; i < this.backtrackStates.length; ++i)
-        this.backtrackStates[i] = 0;
+            this.backtrackStates[i] = 0;
 
         // Clear Canvas and Set image data to have white pixels.
         this.clear();
         for(var pixelIndex in this.imageData.data)
-        this.imageData.data[pixelIndex] = 255;
+            this.imageData.data[pixelIndex] = 255;
     }
 
     generateStartingPoints()
@@ -70,12 +79,11 @@ class DfsDrawer
     draw()
     {
         var iterCount = 0;
-        var numPixels = this.canvasW*this.canvasH;
 
         var intervalFn = function()
         {
 
-            for(var repeat = 0; repeat < 50; ++repeat)
+            for(var repeat = 0; repeat < 100; ++repeat)
             {
                 for(var leadIter in this.leadIndexes)
                 {
@@ -95,11 +103,14 @@ class DfsDrawer
 
         }.bind(this);
 
-        var timerID = setInterval(intervalFn, 1);
+        var timerID = setInterval(intervalFn, 30);
     }
 
     dfsOnIndex(iter, myIndex)
     {
+        if(myIndex === null)
+            return;
+
         // Get my index and node state.
         var nodeState = this.getNodeState(myIndex);
 
@@ -129,7 +140,8 @@ class DfsDrawer
         }
         else
         {
-            console.log("end found");
+            this.leadIndexes[iter] = this.findUnvisitedIndex();
+            console.log('end new index: ', this.leadIndexes[iter]);
         }
     }
 
@@ -234,11 +246,24 @@ class DfsDrawer
 
     findUnvisitedIndex()
     {
-        var unshuffledArray = new Array(this.canvasH);
-        for(var i = 0; i < 100; i++)
-            unshuffledArray[i] = i;
-        var shuffled = this.shuffleArray(unshuffledArray);
-        console.log(shuffled);
+        for(var rowIndex in this.randomizedRowIndexes)
+        {
+            var randRow = this.randomizedRowIndexes[rowIndex];
+
+            for(var columnIndex in this.randomizedColumnIndexes)
+            {
+                var randCol = this.randomizedColumnIndexes[columnIndex];
+                var index = this.xyToIndex(randCol, randRow);
+                var nodeState = this.getNodeState(index);
+                var isUnvisited = nodeState === NodeStates.Unvisited;
+                var isLeadIndex = this.leadIndexes.indexOf(index) >= 0;
+
+                if(isUnvisited && !isLeadIndex)
+                    return index;
+            }
+        }
+
+        return null;
     }
 
     backTrack(index)
@@ -261,14 +286,13 @@ class DfsDrawer
 
             // Test if neighbor has target node state.
             var nodeState = this.getNodeState(neighborIndex);
-            if(nodeState === NodeStates.Unvisted || nodeState === NodeStates.Done)
+            if(nodeState === NodeStates.Unvisited || nodeState === NodeStates.Done)
                 continue;
 
             if(this.oppositeDirection(this.backtrackStates[neighborIndex]) === neighborsDef.direction)
                 return neighborIndex;
         }
 
-        console.log("end found");
         return null;
 
     }

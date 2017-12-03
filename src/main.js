@@ -10,7 +10,8 @@ window.onload = function()
     var imageElement = new Image(200, 200);
     var dfsDrawer = null;
     imageElement.src = "assets/myFace.jpg";
-    imageElement.onload = function(){
+    imageElement.onload = function()
+    {
         dfsDrawer = new DfsDrawer(imageElement);
         dfsDrawer.draw();
     };
