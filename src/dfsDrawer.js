@@ -10,6 +10,11 @@ var NeighborsDefinitions =
     {"direction": "Down", "x": 0, "y": 1},
     {"direction": "Left", "x": -1, "y": 0},
     {"direction": "Right", "x": 1, "y": 0},
+
+    {"direction": "TopLeft", "x": -1, "y": -1},
+    {"direction": "TopRight", "x": 1, "y": -1},
+    {"direction": "BottomLeft", "x": -1, "y": 1},
+    {"direction": "BottomRight", "x": 1, "y": 1},
 ];
 
 var NodeStates =
@@ -103,7 +108,7 @@ class DfsDrawer
 
         }.bind(this);
 
-        var timerID = setInterval(intervalFn, 30);
+        var timerID = setInterval(intervalFn, 200);
     }
 
     dfsOnIndex(iter, myIndex)
@@ -182,6 +187,15 @@ class DfsDrawer
             return "Right";
         if(directionString === "Right")
             return "Left";
+
+        if(directionString === "TopLeft")
+            return "BottomRight";
+        if(directionString === "TopRight")
+            return "BottomLeft";
+        if(directionString === "BottomLeft")
+            return "TopRight";
+        if(directionString === "BottomRight")
+            return "TopLeft";
     }
 
     // translates index to row, column
