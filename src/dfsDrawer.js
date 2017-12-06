@@ -28,44 +28,35 @@ class DfsDrawer
 {
     constructor(imageElement)
     {
-        // Create a Canvas element
-        var canvas = document.getElementById("dfsDrawer");
-        this.canvasW = canvas.width;
-        this.canvasH = canvas.height;
+        // var declaration.
+        this.canvas = document.getElementById("dfsDrawer");
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
 
         this.imageElement = imageElement;
         this.imgW = this.imageElement.width;
         this.imgH = this.imageElement.height;
-        this.maxIters = canvas.width * canvas.height;
-        this.leadIndexes = [];
-        this.generateStartingPoints();
-        this.markSum = null;   // TODO make this work. Count number of nodes mark as visited.
-        var i = null;
 
+        this.fps = 40;
+        this.markSum = null;
+        this.lastShuffleIndexX = 0;
+        this.lastShuffleIndexY = 0;
+        this.numPixels = this.canvas.width * this.canvas.height;
 
-        this.randomizedRowIndexes = new Array(this.canvasH);
-        for(i = 0; i < this.canvasH; i++)
-            this.randomizedRowIndexes[i] = i;
-        this.randomizedRowIndexes = this.shuffleArray(this.randomizedRowIndexes);
+        // Get everything else ready.
+        this.setupStartingPoints();
+        this.setupRandomIndexes();
+        this.setupStateArrays();
+        this.preProcessImageData();
+    }
 
-        this.randomizedColumnIndexes = new Array(this.canvasW);
-        for(i = 0; i < this.canvasW; i++)
-            this.randomizedColumnIndexes[i] = i;
-        this.randomizedColumnIndexes = this.shuffleArray(this.randomizedColumnIndexes);
-
+    preProcessImageData()
+    {
         // Draw image on canvas and capture canvas as 1-d array of color values
-        this.ctx = canvas.getContext('2d');
-        this.ctx.drawImage(this.imageElement, 0, 0, this.canvasW, this.canvasH);
+        this.ctx = this.canvas.getContext('2d');
+        this.ctx.drawImage(this.imageElement, 0, 0, this.width, this.height);
         this.imageData = this.ctx.getImageData(0, 0, this.imgW, this.imgH);
         this.data = new Uint8ClampedArray(this.imageData.data);
-
-        // Creates arrays for visited status and for backtracing.
-        this.nodesStates = new Array(this.canvasW * this.canvasH);
-        for(i = 0; i < this.nodesStates.length; ++i)
-            this.nodesStates[i] = NodeStates.Unvisited;
-        this.backtrackStates = new Array(this.canvasW * this.canvasH);
-        for(i = 0; i < this.backtrackStates.length; ++i)
-            this.backtrackStates[i] = 0;
 
         // Clear Canvas and Set image data to have white pixels.
         this.clear();
@@ -73,12 +64,39 @@ class DfsDrawer
             this.imageData.data[pixelIndex] = 255;
     }
 
-    generateStartingPoints()
+    // Creates arrays for visited status and for backtracing.
+    setupStateArrays()
     {
+        var i = null;
+        this.nodesStates = new Array(this.width * this.height);
+        for(i = 0; i < this.nodesStates.length; ++i)
+            this.nodesStates[i] = NodeStates.Unvisited;
+        this.backtrackStates = new Array(this.width * this.height);
+        for(i = 0; i < this.backtrackStates.length; ++i)
+            this.backtrackStates[i] = 0;
+    }
+
+    setupRandomIndexes()
+    {
+        var i = null;
+        this.randomizedRowIndexes = new Array(this.height);
+        for(i = 0; i < this.height; i++)
+            this.randomizedRowIndexes[i] = i;
+        this.randomizedRowIndexes = this.shuffleArray(this.randomizedRowIndexes);
+
+        this.randomizedColumnIndexes = new Array(this.width);
+        for(i = 0; i < this.width; i++)
+            this.randomizedColumnIndexes[i] = i;
+        this.randomizedColumnIndexes = this.shuffleArray(this.randomizedColumnIndexes);
+    }
+
+    setupStartingPoints()
+    {
+        this.leadIndexes = [];
         this.leadIndexes.push(0);
-        this.leadIndexes.push(this.canvasW-1);
-        this.leadIndexes.push(this.canvasW * this.canvasH -1);
-        this.leadIndexes.push((this.canvasW-1)*this.canvasH-1);
+        this.leadIndexes.push(this.width-1);
+        this.leadIndexes.push(this.width * this.height -1);
+        this.leadIndexes.push((this.width-1)*this.height-1);
     }
 
     draw()
@@ -100,7 +118,7 @@ class DfsDrawer
 
             this.drawImage();
 
-            if(this.markSum >= this.maxIters)
+            if(this.markSum >= this.numPixels)
             {
                 clearInterval(timerID);
                 console.log("done stopped");
@@ -108,7 +126,7 @@ class DfsDrawer
 
         }.bind(this);
 
-        var timerID = setInterval(intervalFn, 200);
+        var timerID = setInterval(intervalFn, 1000/this.fps);
     }
 
     dfsOnIndex(iter, myIndex)
@@ -152,7 +170,7 @@ class DfsDrawer
 
     clear()
     {
-        this.ctx.clearRect(0,0, this.canvasW, this.canvasH);
+        this.ctx.clearRect(0,0, this.width, this.height);
     }
 
     drawImage()
@@ -202,17 +220,17 @@ class DfsDrawer
     indexToXY(index)
     {
         return {
-            "x": index % this.canvasW,
-            "y": Math.floor(index / this.canvasW)
+            "x": index % this.width,
+            "y": Math.floor(index / this.width)
         };
     }
 
     // translates row, column to index
     xyToIndex(x, y)
     {
-        if(x < 0 || y < 0 || x >= this.canvasW || y >= this.canvasH)
+        if(x < 0 || y < 0 || x >= this.width || y >= this.height)
             return -1;
-        return x + y * this.canvasW;
+        return x + y * this.width;
     }
 
     getNodeState(index)
@@ -260,11 +278,11 @@ class DfsDrawer
 
     findUnvisitedIndex()
     {
-        for(var rowIndex in this.randomizedRowIndexes)
+        for(var rowIndex = this.lastShuffleIndexY; rowIndex < this.height; ++rowIndex)
         {
             var randRow = this.randomizedRowIndexes[rowIndex];
 
-            for(var columnIndex in this.randomizedColumnIndexes)
+            for(var columnIndex = this.lastShuffleIndexX; columnIndex < this.width; ++columnIndex)
             {
                 var randCol = this.randomizedColumnIndexes[columnIndex];
                 var index = this.xyToIndex(randCol, randRow);
@@ -273,7 +291,11 @@ class DfsDrawer
                 var isLeadIndex = this.leadIndexes.indexOf(index) >= 0;
 
                 if(isUnvisited && !isLeadIndex)
+                {
+                    this.lastShuffleIndexX = columnIndex;
+                    this.lastShuffleIndexY = rowIndex;
                     return index;
+                }
             }
         }
 
