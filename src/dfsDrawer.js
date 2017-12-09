@@ -48,6 +48,7 @@ class DfsDrawer
         this.setupRandomIndexes();
         this.setupStateArrays();
         this.preProcessImageData();
+        this.frontLoadColorSums();
     }
 
     preProcessImageData()
@@ -68,12 +69,24 @@ class DfsDrawer
     setupStateArrays()
     {
         var i = null;
+
+        // Initialize node states array so we can see if we visited a node.
         this.nodesStates = new Array(this.width * this.height);
         for(i = 0; i < this.nodesStates.length; ++i)
             this.nodesStates[i] = NodeStates.Unvisited;
+
+        // Initialize backtracing array
         this.backtrackStates = new Array(this.width * this.height);
         for(i = 0; i < this.backtrackStates.length; ++i)
             this.backtrackStates[i] = 0;
+    }
+
+    // Cache color values so each value isnt calculated 4 times.
+    frontLoadColorSums()
+    {
+        this.colorSums = new Array(this.width * this.height);
+        for(let i = 0; i < this.colorSums.length; ++i)
+            this.colorSums[i] = this.simpleColorSumAtIndex(i);
     }
 
     setupRandomIndexes()
@@ -99,13 +112,21 @@ class DfsDrawer
         this.leadIndexes.push((this.width-1)*this.height-1);
     }
 
+    simpleColorSumAtIndex(index)
+    {
+        var realIndex = index*4;
+        var r = this.data[realIndex + 0];
+        var g = this.data[realIndex + 1];
+        var b = this.data[realIndex + 2];
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
     draw()
     {
         var iterCount = 0;
 
         var intervalFn = function()
         {
-
             for(var repeat = 0; repeat < 100; ++repeat)
             {
                 for(var leadIter in this.leadIndexes)
@@ -246,7 +267,6 @@ class DfsDrawer
             this.showPixelAtIndex(index);
         }
 
-
         this.nodesStates[index] = nodeState;
     }
 
@@ -255,16 +275,6 @@ class DfsDrawer
         this.imageData.data[4*index + 0] = this.data[4*index + 0];
         this.imageData.data[4*index + 1] = this.data[4*index + 1];
         this.imageData.data[4*index + 2] = this.data[4*index + 2];
-    }
-
-    colorSumAtIndex(index)
-    {
-        var realIndex = index*4;
-        var r = this.data[realIndex + 0];
-        var g = this.data[realIndex + 1];
-        var b = this.data[realIndex + 2];
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        //return sum*(255 - this.data[realIndex + 3]);
     }
 
     shuffleArray(a) {
@@ -360,7 +370,7 @@ class DfsDrawer
             if(this.getNodeState(neighborIndex) !== needsNodeState)
                 continue;
 
-            let colorSum = this.colorSumAtIndex(neighborIndex);
+            let colorSum = this.colorSums[neighborIndex];
 
             if(darkestNeighbor.index === null || colorSum < darkestNeighbor.sum)
             {
@@ -389,7 +399,7 @@ class DfsDrawer
             if(neighborIndex < 0)
                 continue;
 
-            let colorSum = this.colorSumAtIndex(neighborIndex);
+            let colorSum = this.colorSums[neighborIndex];
             let nodeStateString = this.nodeStateAsString(this.getNodeState(neighborIndex));
 
             console.log(neighborsDef.direction, "Index: ", neighborIndex,
