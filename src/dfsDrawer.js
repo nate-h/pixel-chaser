@@ -297,6 +297,8 @@ class DfsDrawer
                     return index;
                 }
             }
+
+            this.lastShuffleIndexX = 0;
         }
 
         return null;
