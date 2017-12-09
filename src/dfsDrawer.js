@@ -51,16 +51,22 @@ class DfsDrawer
         this.frontLoadColorSums();
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // One time functions for setting up
+    ////////////////////////////////////////////////////////////////////////////
+
     preProcessImageData()
     {
         // Draw image on canvas and capture canvas as 1-d array of color values
         this.ctx = this.canvas.getContext('2d');
         this.ctx.drawImage(this.imageElement, 0, 0, this.width, this.height);
         this.imageData = this.ctx.getImageData(0, 0, this.imgW, this.imgH);
-        this.data = new Uint8ClampedArray(this.imageData.data);
+
+        // TODO: Apply any filters here.
 
         // Clear Canvas and Set image data to have white pixels.
         this.clear();
+        this.data = new Uint8ClampedArray(this.imageData.data);
         for(var pixelIndex in this.imageData.data)
             this.imageData.data[pixelIndex] = 255;
     }
@@ -121,6 +127,10 @@ class DfsDrawer
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Drawing/ Algorithm functions.
+    ////////////////////////////////////////////////////////////////////////////
+
     draw()
     {
         var iterCount = 0;
@@ -166,7 +176,7 @@ class DfsDrawer
         var darkNeighbor = this.findDarkestNeighbor(myIndex, NodeStates.Unvisited);
 
         // Move onto this index and process it now.
-        if(darkNeighbor.index !== null)
+        if(darkNeighbor.index !== null && !this.indexTaken(iter, darkNeighbor.index))
         {
             this.leadIndexes[iter] = darkNeighbor.index;
             this.backtrackStates[myIndex] = darkNeighbor.direction;
@@ -187,6 +197,19 @@ class DfsDrawer
             this.leadIndexes[iter] = this.findUnvisitedIndex();
             console.log('end new index: ', this.leadIndexes[iter]);
         }
+    }
+
+    indexTaken(iter, newIndex)
+    {
+        for(var index in this.leadIndexes)
+        {
+            if(index === iter)
+                continue;
+            if(this.leadIndexes[index] === newIndex)
+                return true;
+        }
+
+        return false;
     }
 
     clear()
