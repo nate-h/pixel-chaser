@@ -3,27 +3,6 @@
 // Description: Draws image using dfs algorithm.
 ////////////////////////////////////////////////////////////////////////////////
 
-// Helper functions
-var NeighborsDefinitions =
-[
-    {"direction": "Top", "x": 0, "y": -1},
-    {"direction": "Down", "x": 0, "y": 1},
-    {"direction": "Left", "x": -1, "y": 0},
-    {"direction": "Right", "x": 1, "y": 0},
-
-    {"direction": "TopLeft", "x": -1, "y": -1},
-    {"direction": "TopRight", "x": 1, "y": -1},
-    {"direction": "BottomLeft", "x": -1, "y": 1},
-    {"direction": "BottomRight", "x": 1, "y": 1},
-];
-
-var NodeStates =
-{
-    "Unvisited": 0,
-    "Visited": 1,
-    "Done": 2,
-};
-
 class DfsDrawer
 {
     constructor(imageElement)
@@ -43,6 +22,26 @@ class DfsDrawer
         this.lastShuffleIndexX = 0;
         this.lastShuffleIndexY = 0;
         this.numPixels = this.canvas.width * this.canvas.height;
+
+        this.nodeStates =
+        {
+            "Unvisited": 0,
+            "Visited": 1,
+            "Done": 2,
+        };
+
+        this.neighbors =
+        [
+            {"direction": "Top", "x": 0, "y": -1},
+            {"direction": "Down", "x": 0, "y": 1},
+            {"direction": "Left", "x": -1, "y": 0},
+            {"direction": "Right", "x": 1, "y": 0},
+
+            {"direction": "TopLeft", "x": -1, "y": -1},
+            {"direction": "TopRight", "x": 1, "y": -1},
+            {"direction": "BottomLeft", "x": -1, "y": 1},
+            {"direction": "BottomRight", "x": 1, "y": 1},
+        ];
 
         // Get everything else ready.
         this.setupStartingPoints();
@@ -80,7 +79,7 @@ class DfsDrawer
         // Initialize node states array so we can see if we visited a node.
         this.nodesStates = new Array(this.width * this.height);
         for(i = 0; i < this.nodesStates.length; ++i)
-            this.nodesStates[i] = NodeStates.Unvisited;
+            this.nodesStates[i] = this.nodeStates.Unvisited;
 
         // Initialize backtracing array
         this.backtrackStates = new Array(this.width * this.height);
@@ -167,11 +166,11 @@ class DfsDrawer
         var nodeState = this.getNodeState(myIndex);
 
         // Mark as visited if I've never been visited.
-        if(nodeState === NodeStates.Unvisited)
-            this.setNodeState(myIndex, NodeStates.Visited);
+        if(nodeState === this.nodeStates.Unvisited)
+            this.setNodeState(myIndex, this.nodeStates.Visited);
 
         // Find darkest Neighbor that hasn't been visited yet.
-        var darkNeighbor = this.findDarkestNeighbor(myIndex, NodeStates.Unvisited);
+        var darkNeighbor = this.findDarkestNeighbor(myIndex, this.nodeStates.Unvisited);
 
         // Move onto this index and process it now.
         if(darkNeighbor.index !== null && !this.indexTaken(iter, darkNeighbor.index))
@@ -186,7 +185,7 @@ class DfsDrawer
 
         if(lastIndex !== null)
         {
-            this.setNodeState(myIndex, NodeStates.Done);
+            this.setNodeState(myIndex, this.nodeStates.Done);
             this.leadIndexes[iter] = lastIndex;
             return;
         }
@@ -266,7 +265,7 @@ class DfsDrawer
 
     setNodeState(index, nodeState)
     {
-        if(nodeState === NodeStates.Visited)
+        if(nodeState === this.nodeStates.Visited)
         {
             this.markSum++;
             this.showPixelAtIndex(index);
@@ -303,7 +302,7 @@ class DfsDrawer
                 var randCol = this.randomizedColumnIndexes[columnIndex];
                 var index = this.xyToIndex(randCol, randRow);
                 var nodeState = this.getNodeState(index);
-                var isUnvisited = nodeState === NodeStates.Unvisited;
+                var isUnvisited = nodeState === this.nodeStates.Unvisited;
                 var isLeadIndex = this.leadIndexes.indexOf(index) >= 0;
 
                 if(isUnvisited && !isLeadIndex)
@@ -327,9 +326,9 @@ class DfsDrawer
 
 
         // Get colors value for each of neighbors
-        for(var dirIndex in NeighborsDefinitions)
+        for(var dirIndex in this.neighbors)
         {
-            let neighborsDef = NeighborsDefinitions[dirIndex];
+            let neighborsDef = this.neighbors[dirIndex];
             let x = neighborsDef.x + xyTuple.x;
             let y = neighborsDef.y + xyTuple.y;
             let neighborIndex = this.xyToIndex(x, y);
@@ -340,7 +339,7 @@ class DfsDrawer
 
             // Test if neighbor has target node state.
             var nodeState = this.getNodeState(neighborIndex);
-            if(nodeState === NodeStates.Unvisited || nodeState === NodeStates.Done)
+            if(nodeState === this.nodeStates.Unvisited || nodeState === this.nodeStates.Done)
                 continue;
 
             if(this.oppositeDirection(this.backtrackStates[neighborIndex]) === neighborsDef.direction)
@@ -361,9 +360,9 @@ class DfsDrawer
         };
 
         // See which neight is darkest.
-        for(var dirIndex in NeighborsDefinitions)
+        for(var dirIndex in this.neighbors)
         {
-            let neighborsDef = NeighborsDefinitions[dirIndex];
+            let neighborsDef = this.neighbors[dirIndex];
             let x = neighborsDef.x + xyTuple.x;
             let y = neighborsDef.y + xyTuple.y;
             let neighborIndex = this.xyToIndex(x, y);
@@ -398,9 +397,9 @@ class DfsDrawer
         var xyTuple = this.indexToXY(index);
 
         // Get colors value for each of neighbors
-        for(var dirIndex in NeighborsDefinitions)
+        for(var dirIndex in this.neighbors)
         {
-            let neighborsDef = NeighborsDefinitions[dirIndex];
+            let neighborsDef = this.neighbors[dirIndex];
             let x = neighborsDef.x + xyTuple.x;
             let y = neighborsDef.y + xyTuple.y;
             let neighborIndex = this.xyToIndex(x, y);
@@ -419,6 +418,6 @@ class DfsDrawer
 
     nodeStateAsString(nodeStateInt)
     {
-        return Object.keys(NodeStates)[nodeStateInt];
+        return Object.keys(this.nodeStates)[nodeStateInt];
     }
 }
