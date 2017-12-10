@@ -5,6 +5,9 @@
 //              and return the result.
 ////////////////////////////////////////////////////////////////////////////////
 
+// For pixelation algorithm look up:
+// https://stackoverflow.com/questions/4047031/help-with-the-theory-behind-a-pixelate-algorithm
+
 class ImageFilter
 {
     constructor()

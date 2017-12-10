@@ -12,12 +12,15 @@ class DfsDrawer
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
+        this.canvas.addEventListener('click', this.onClick.bind(this));
+
         this.imageElement = imageElement;
         this.imgW = this.imageElement.width;
         this.imgH = this.imageElement.height;
 
+        this.timerID = null;
         this.fps = 40;
-        this.loopRepeat = 50;
+        this.loopRepeat = 75;
         this.markSum = null;
         this.lastShuffleIndexX = 0;
         this.lastShuffleIndexY = 0;
@@ -51,6 +54,13 @@ class DfsDrawer
         this.setupStateArrays();
         this.preProcessImageData();
         this.frontLoadColorSums();
+    }
+
+    onClick()
+    {
+        console.log("click!");
+
+        clearInterval(this.timerID);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -149,13 +159,13 @@ class DfsDrawer
 
             if(this.markSum >= this.numPixels)
             {
-                clearInterval(timerID);
+                clearInterval(this.timerID);
                 console.log("done stopped");
             }
 
         }.bind(this);
 
-        var timerID = setInterval(intervalFn, 1000/this.fps);
+        this.timerID = setInterval(intervalFn, 1000/this.fps);
     }
 
     applyDfsOnIndex(iter)
