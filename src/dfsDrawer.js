@@ -36,12 +36,14 @@ class DfsDrawer
             {"direction": "Down", "x": 0, "y": 1},
             {"direction": "Left", "x": -1, "y": 0},
             {"direction": "Right", "x": 1, "y": 0},
-
-            {"direction": "TopLeft", "x": -1, "y": -1},
-            {"direction": "TopRight", "x": 1, "y": -1},
-            {"direction": "BottomLeft", "x": -1, "y": 1},
-            {"direction": "BottomRight", "x": 1, "y": 1},
         ];
+
+        /*
+        {"direction": "TopLeft", "x": -1, "y": -1},
+        {"direction": "TopRight", "x": 1, "y": -1},
+        {"direction": "BottomLeft", "x": -1, "y": 1},
+        {"direction": "BottomRight", "x": 1, "y": 1},
+         */
 
         // Get everything else ready.
         this.setupStartingPoints();
