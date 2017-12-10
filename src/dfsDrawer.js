@@ -38,6 +38,7 @@ class DfsDrawer
         this.imgH = this.imageElement.height;
 
         this.fps = 40;
+        this.loopRepeat = 50;
         this.markSum = null;
         this.lastShuffleIndexX = 0;
         this.lastShuffleIndexY = 0;
@@ -137,15 +138,11 @@ class DfsDrawer
 
         var intervalFn = function()
         {
-            for(var repeat = 0; repeat < 100; ++repeat)
+            for(var repeat = 0; repeat < this.loopRepeat; ++repeat)
             {
                 for(var leadIter in this.leadIndexes)
-                {
-                    var myIndex = this.leadIndexes[leadIter];
-                    this.dfsOnIndex(leadIter, myIndex);
-                }
+                    this.applyDfsOnIndex(leadIter);
             }
-
 
             this.drawImage();
 
@@ -160,8 +157,9 @@ class DfsDrawer
         var timerID = setInterval(intervalFn, 1000/this.fps);
     }
 
-    dfsOnIndex(iter, myIndex)
+    applyDfsOnIndex(iter)
     {
+        var myIndex = this.leadIndexes[iter];
         if(myIndex === null)
             return;
 
@@ -199,19 +197,6 @@ class DfsDrawer
         }
     }
 
-    indexTaken(iter, newIndex)
-    {
-        for(var index in this.leadIndexes)
-        {
-            if(index === iter)
-                continue;
-            if(this.leadIndexes[index] === newIndex)
-                return true;
-        }
-
-        return false;
-    }
-
     clear()
     {
         this.ctx.clearRect(0,0, this.width, this.height);
@@ -223,20 +208,17 @@ class DfsDrawer
         this.ctx.putImageData(this.imageData, 0, 0);
     }
 
-    grayScale()
+    indexTaken(iter, newIndex)
     {
-        var data = this.imageData.data;
-
-        for(var i = 0; i < data.length; i += 4)
+        for(var index in this.leadIndexes)
         {
-            var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
-
-            data[i] = brightness;      // red
-            data[i + 1] = brightness;  // green
-            data[i + 2] = brightness;  // blue
+            if(index === iter)
+                continue;
+            if(this.leadIndexes[index] === newIndex)
+                return true;
         }
 
-        this.drawImage();
+        return false;
     }
 
     oppositeDirection(directionString)
@@ -300,13 +282,14 @@ class DfsDrawer
         this.imageData.data[4*index + 2] = this.data[4*index + 2];
     }
 
-    shuffleArray(a) {
-        for(let i = a.length - 1; i > 0; --i)
+    shuffleArray(array)
+    {
+        for(let i = array.length - 1; i > 0; --i)
         {
             const j = Math.floor(Math.random() * (i + 1));
-            [a[i], a[j]] = [a[j], a[i]];
+            [array[i], array[j]] = [array[j], array[i]];
         }
-        return a;
+        return array;
     }
 
     findUnvisitedIndex()
@@ -405,6 +388,10 @@ class DfsDrawer
 
         return darkestNeighbor;
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Debug functions.
+    ////////////////////////////////////////////////////////////////////////////
 
     printNeighborsStats(index)
     {
