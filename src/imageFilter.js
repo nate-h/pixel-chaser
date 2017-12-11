@@ -15,6 +15,11 @@ class ImageFilter
 
     }
 
+    pixelate()
+    {
+
+    }
+
     grayScale(imageData)
     {
         var data = imageData.data;

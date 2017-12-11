@@ -21,9 +21,6 @@ class DfsDrawer
         this.timerID = null;
         this.fps = 40;
         this.loopRepeat = 75;
-        this.markSum = null;
-        this.lastShuffleIndexX = 0;
-        this.lastShuffleIndexY = 0;
         this.numPixels = this.canvas.width * this.canvas.height;
 
         this.nodeStates =
@@ -46,21 +43,38 @@ class DfsDrawer
         {"direction": "TopRight", "x": 1, "y": -1},
         {"direction": "BottomLeft", "x": -1, "y": 1},
         {"direction": "BottomRight", "x": 1, "y": 1},
-         */
+        */
+
+        this.preProcessImageData();
+        this.reset();
 
         // Get everything else ready.
-        this.setupStartingPoints();
+
+        this.frontLoadColorSums();
+    }
+
+    reset()
+    {
+        this.markSum = null;
+        this.lastShuffleIndexX = 0;
+        this.lastShuffleIndexY = 0;
+
+        this.resetStartingPoints();
         this.setupRandomIndexes();
         this.setupStateArrays();
-        this.preProcessImageData();
-        this.frontLoadColorSums();
+        this.clearRect();
+
+        // Paint imagedata white.
+        for(var pixelIndex in this.imageData.data)
+            this.imageData.data[pixelIndex] = 255;
     }
 
     onClick()
     {
-        console.log("click!");
-
+        // Clear interval, reset some properties and restart pixel chaser.
         clearInterval(this.timerID);
+        this.reset();
+        this.draw();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,7 +91,7 @@ class DfsDrawer
         // TODO: Apply any filters here.
 
         // Clear Canvas and Set image data to have white pixels.
-        this.clear();
+        this.clearRect();
         this.data = new Uint8ClampedArray(this.imageData.data);
         for(var pixelIndex in this.imageData.data)
             this.imageData.data[pixelIndex] = 255;
@@ -109,19 +123,23 @@ class DfsDrawer
 
     setupRandomIndexes()
     {
+        // setup vars.
         var i = null;
         this.randomizedRowIndexes = new Array(this.height);
+        this.randomizedColumnIndexes = new Array(this.width);
+
+        // Initialize arrays with ordred numbers.
         for(i = 0; i < this.height; i++)
             this.randomizedRowIndexes[i] = i;
-        this.randomizedRowIndexes = this.shuffleArray(this.randomizedRowIndexes);
-
-        this.randomizedColumnIndexes = new Array(this.width);
         for(i = 0; i < this.width; i++)
             this.randomizedColumnIndexes[i] = i;
+
+        // Shuffle those numbers.
+        this.randomizedRowIndexes = this.shuffleArray(this.randomizedRowIndexes);
         this.randomizedColumnIndexes = this.shuffleArray(this.randomizedColumnIndexes);
     }
 
-    setupStartingPoints()
+    resetStartingPoints()
     {
         this.leadIndexes = [];
         this.leadIndexes.push(0);
@@ -208,14 +226,13 @@ class DfsDrawer
         }
     }
 
-    clear()
+    clearRect()
     {
         this.ctx.clearRect(0,0, this.width, this.height);
     }
 
     drawImage()
     {
-        this.clear();
         this.ctx.putImageData(this.imageData, 0, 0);
     }
 
