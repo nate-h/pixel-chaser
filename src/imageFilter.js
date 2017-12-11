@@ -15,8 +15,43 @@ class ImageFilter
 
     }
 
-    pixelate()
+    // Note: scale value needs to divide evenly into width, height
+    pixelate(imageData, scale, width, height)
     {
+        console.log("Pixelate!");
+        var targetPixelIndexes = [];
+        var xItersMax = width/scale;
+        var yItersMax = height/scale;
+        var numPixelPerBlock = scale * scale;
+        var xIter = 0;
+        var yIter = 0;
+        var blockIndex = 0;
+        var startingIndex = 0;
+        var colorSum = 0;
+        var colorAverage = 0;
+
+        for(xIter = 0; xIter < xItersMax; ++xIter)
+        {
+            for(yIter = 0; yIter < yItersMax; ++yIter)
+            {
+                // Calculate average pixel color for this block.
+                colorSum = 0;
+                //startingIndex = xIter * yIter  ??
+
+
+                // for loop for getting color sum of all pixels for block.
+                for(blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
+                {
+                    // translate index to x, y coordinates.
+
+                }
+
+                colorAverage = colorSum / numPixelPerBlock;
+
+                // for loop for getting color sum of all pixels for block.
+
+            }
+        }
 
     }
 

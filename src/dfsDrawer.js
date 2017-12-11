@@ -89,6 +89,8 @@ class DfsDrawer
         this.imageData = this.ctx.getImageData(0, 0, this.imgW, this.imgH);
 
         // TODO: Apply any filters here.
+        this.imageFilter = new ImageFilter();
+        this.imageFilter.pixelate(this.imageData, 10, this.width, this.height);
 
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();

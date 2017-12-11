@@ -12,7 +12,7 @@
     "dojo"          : false,
 
     "predef"        : [  // Custom globals.
-
+        "ImageFilter"
     ],
 
 
