@@ -163,6 +163,7 @@ class DfsDrawer
 
     draw()
     {
+        console.log("Start drawing.");
         var iterCount = 0;
 
         var intervalFn = function()
@@ -178,7 +179,7 @@ class DfsDrawer
             if(this.markSum >= this.numPixels)
             {
                 clearInterval(this.timerID);
-                console.log("done stopped");
+                console.log("Completed drawing.");
             }
 
         }.bind(this);
@@ -222,7 +223,7 @@ class DfsDrawer
         else
         {
             this.leadIndexes[iter] = this.findUnvisitedIndex();
-            console.log('end new index: ', this.leadIndexes[iter]);
+            //console.log('end new index: ', this.leadIndexes[iter]);
         }
     }
 
