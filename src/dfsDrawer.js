@@ -81,6 +81,7 @@ class DfsDrawer
     // One time functions for setting up
     ////////////////////////////////////////////////////////////////////////////
 
+    // 200, 100, 50, 25, 10,5,2,1
     preProcessImageData()
     {
         // Draw image on canvas and capture canvas as 1-d array of color values

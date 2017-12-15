@@ -77,7 +77,7 @@ class ImageFilter
                 for(blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
                 {
                     // translate index to x, y coordinates.
-                    blockXY = this.indexToXY(blockIndex, width);
+                    blockXY = this.indexToXY(blockIndex, scale);
                     blockX = startingX + blockXY.x;
                     blockY = startingY + blockXY.y;
 
