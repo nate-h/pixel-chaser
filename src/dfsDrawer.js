@@ -20,7 +20,7 @@ class DfsDrawer
 
         this.timerID = null;
         this.fps = 40;
-        this.loopRepeat = 75;
+        this.loopRepeat = 55;
         this.numPixels = this.canvas.width * this.canvas.height;
 
         this.nodeStates =
@@ -89,13 +89,17 @@ class DfsDrawer
         this.ctx.drawImage(this.imageElement, 0, 0, this.width, this.height);
         this.imageData = this.ctx.getImageData(0, 0, this.imgW, this.imgH);
 
-        // TODO: Apply any filters here.
+        // Create processed image data array.
+        this.data = new Uint8ClampedArray(this.imageData.data);
+        this.modifiedImageData = new Uint8ClampedArray(this.imageData.data);
+
+        // Apply any filters here.
         this.imageFilter = new ImageFilter();
-        this.imageFilter.pixelate(this.imageData, 10, this.width, this.height);
+        this.imageFilter.pixelate(this.modifiedImageData, 4, this.width, this.height);
 
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();
-        this.data = new Uint8ClampedArray(this.imageData.data);
+
         for(var pixelIndex in this.imageData.data)
             this.imageData.data[pixelIndex] = 255;
     }
@@ -154,10 +158,12 @@ class DfsDrawer
     simpleColorSumAtIndex(index)
     {
         var realIndex = index*4;
-        var r = this.data[realIndex + 0];
-        var g = this.data[realIndex + 1];
-        var b = this.data[realIndex + 2];
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        var r = this.modifiedImageData[realIndex + 0];
+        var g = this.modifiedImageData[realIndex + 1];
+        var b = this.modifiedImageData[realIndex + 2];
+        return 0.2126 * g + 0.7152 * r + 0.0722 * b;
+        //return r + g + b;
+        //return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
     ////////////////////////////////////////////////////////////////////////////

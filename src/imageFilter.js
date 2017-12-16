@@ -92,18 +92,18 @@ class ImageFilter
     getColorsAtIndex(imageData, index)
     {
         var realIndex = index*4;
-        var r = imageData.data[realIndex + 0];
-        var g = imageData.data[realIndex + 1];
-        var b = imageData.data[realIndex + 2];
+        var r = imageData[realIndex + 0];
+        var g = imageData[realIndex + 1];
+        var b = imageData[realIndex + 2];
         return {"r": r, "g": g, "b": b };
     }
 
     setColorsAtIndex(imageData, index, colors)
     {
         var realIndex = index*4;
-        imageData.data[realIndex + 0] = colors.r;
-        imageData.data[realIndex + 1] = colors.g;
-        imageData.data[realIndex + 2] = colors.b;
+        imageData[realIndex + 0] = colors.r;
+        imageData[realIndex + 1] = colors.g;
+        imageData[realIndex + 2] = colors.b;
     }
 
     indexToXY(index, width)
@@ -123,7 +123,7 @@ class ImageFilter
 
     grayScale(imageData)
     {
-        var data = imageData.data;
+        var data = imageData;
 
         for(var i = 0; i < data.length; i += 4)
         {
