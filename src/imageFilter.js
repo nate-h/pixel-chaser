@@ -89,6 +89,13 @@ class ImageFilter
 
     }
 
+    // A filter for making edges much darker so they have a higher
+    // probability of being proccessed.
+    edgeDarkening()
+    {
+
+    }
+
     getColorsAtIndex(imageData, index)
     {
         var realIndex = index*4;
