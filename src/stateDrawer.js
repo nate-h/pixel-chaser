@@ -7,39 +7,38 @@ class StateDrawer
 {
     constructor()
     {
-
-
+        var stateDrawerList = document.getElementById("stateDrawerList");
+        stateDrawerList.style.width = "200px";
+        console.log(stateDrawerList);
+        this.imageWidth = 200;
+        this.imageHeight = 200;
     }
 
-    addState(imageData, message)
+    addState(imageDataData, message)
     {
-        // below is optional
+        var stateDrawerList = document.getElementById("stateDrawerList");
+        var li = document.createElement("li");
+        var messageSpan = document.createElement("span");
+        messageSpan.innerHTML = message;
+        var canvas = this.createCanvas(imageDataData);
+        li.appendChild(canvas);
+        li.appendChild(messageSpan);
+        stateDrawerList.appendChild(li);
+    }
 
+    createCanvas(imageDataData)
+    {
         var canvas = document.createElement('canvas');
 
         canvas.id = "CursorLayer";
-        canvas.width = 1224;
-        canvas.height = 768;
-        canvas.style.zIndex = 8;
-        canvas.style.position = "absolute";
-        canvas.style.border = "1px solid";
+        canvas.width = this.imageWidth;
+        canvas.height = this.imageHeight;
 
         var ctx = canvas.getContext("2d");
-        ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
-        ctx.fillRect(100, 100, 200, 200);
-        ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
-        ctx.fillRect(150, 150, 200, 200);
-        ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
-        ctx.fillRect(200, 50, 200, 200);
+        var imageData = new ImageData(imageDataData, this.imageWidth, this.imageHeight);
 
+        ctx.putImageData(imageData, 0, 0);
 
-        //var stateDrawerList = document.getElementsByTagName("stateDrawerList")[0];
-
-
-        var stateDrawerList = document.getElementById("stateDrawerList");
-
-        var li = document.createElement("li");
-        li.appendChild(canvas);
-        stateDrawerList.appendChild(li);
+        return canvas;
     }
 }

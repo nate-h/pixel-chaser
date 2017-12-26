@@ -26,7 +26,14 @@ body
     background: white;
 }
 
-#stateDrawer
+#stateDrawerList
 {
+    list-style-type: none;
 
+    span
+    {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+    }
 }

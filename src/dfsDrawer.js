@@ -12,7 +12,7 @@ class DfsDrawer
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
-        this.stateDrawerList = new StateDrawer();
+        this.stateDrawer = new StateDrawer();
 
         this.canvas.addEventListener('click', this.onClick.bind(this));
 
@@ -76,7 +76,6 @@ class DfsDrawer
     // One time functions for setting up
     ////////////////////////////////////////////////////////////////////////////
 
-    // 200, 100, 50, 25, 10,5,2,1
     preProcessImageData()
     {
         // Draw image on canvas and capture canvas as 1-d array of color values
@@ -90,7 +89,12 @@ class DfsDrawer
 
         // Apply any filters here.
         this.imageFilter = new ImageFilter();
+        var pixelValue = 5;
         this.imageFilter.pixelate(this.modifiedImageData, 5, this.width, this.height);
+
+        this.stateDrawer.addState(this.modifiedImageData, "pixelated w/ " + pixelValue);
+        this.stateDrawer.addState(this.modifiedImageData, "pixelated w/ " + pixelValue);
+
 
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();
@@ -262,15 +266,6 @@ class DfsDrawer
             return "Right";
         if(directionString === "Right")
             return "Left";
-
-        if(directionString === "TopLeft")
-            return "BottomRight";
-        if(directionString === "TopRight")
-            return "BottomLeft";
-        if(directionString === "BottomLeft")
-            return "TopRight";
-        if(directionString === "BottomRight")
-            return "TopLeft";
     }
 
     // translates index to row, column
