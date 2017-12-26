@@ -12,6 +12,8 @@ class DfsDrawer
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
+        this.stateDrawerList = new StateDrawer();
+
         this.canvas.addEventListener('click', this.onClick.bind(this));
 
         this.imageElement = imageElement;
@@ -37,13 +39,6 @@ class DfsDrawer
             {"direction": "Left", "x": -1, "y": 0},
             {"direction": "Right", "x": 1, "y": 0},
         ];
-
-        /*
-        {"direction": "TopLeft", "x": -1, "y": -1},
-        {"direction": "TopRight", "x": 1, "y": -1},
-        {"direction": "BottomLeft", "x": -1, "y": 1},
-        {"direction": "BottomRight", "x": 1, "y": 1},
-        */
 
         this.preProcessImageData();
         this.reset();
@@ -95,7 +90,7 @@ class DfsDrawer
 
         // Apply any filters here.
         this.imageFilter = new ImageFilter();
-        this.imageFilter.pixelate(this.modifiedImageData, 4, this.width, this.height);
+        this.imageFilter.pixelate(this.modifiedImageData, 5, this.width, this.height);
 
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();
@@ -161,9 +156,7 @@ class DfsDrawer
         var r = this.modifiedImageData[realIndex + 0];
         var g = this.modifiedImageData[realIndex + 1];
         var b = this.modifiedImageData[realIndex + 2];
-        return 0.2126 * g + 0.7152 * r + 0.0722 * b;
-        //return r + g + b;
-        //return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
     ////////////////////////////////////////////////////////////////////////////

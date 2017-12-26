@@ -93,7 +93,7 @@ class ImageFilter
     // probability of being proccessed.
     edgeDarkening()
     {
-
+        // use a Canny edge detector?
     }
 
     getColorsAtIndex(imageData, index)

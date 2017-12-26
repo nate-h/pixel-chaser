@@ -40,6 +40,7 @@ module.exports = function(grunt) {
             dist: {
                 src: [
                     'src/main.js',
+                    'src/stateDrawer.js',
                     'src/imageFilter.js',
                     'src/dfsDrawer.js',
                 ],

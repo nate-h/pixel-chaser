@@ -12,7 +12,8 @@
     "dojo"          : false,
 
     "predef"        : [  // Custom globals.
-        "ImageFilter"
+        "ImageFilter",
+        "StateDrawer"
     ],
 
 

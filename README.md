@@ -23,3 +23,15 @@ Without looking at the code, I wanted to create something similar.
 Add noise to influence direction.
 Use multiple filters at once.
 Every so often branch off and start new independent path?
+
+# TODO
+operate on block of pixels rather than a single pixel.
+ * if block size matches pixelation size, algorithm looks less hacky.
+Add edge detection and paint those pixels black.
+ * black edges will attract dfs path drawer and would look cool.
+Add guassian filter
+ * Need to smooth out data to edge detection isn't that crazy.
+Need to output image arrays so we can see what the data looks like.
+    * Every adjustment to the image should output an image
+
+posterization
