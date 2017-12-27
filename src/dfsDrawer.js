@@ -11,6 +11,7 @@ class DfsDrawer
         this.canvas = document.getElementById("dfsDrawer");
         this.width = this.canvas.width;
         this.height = this.canvas.height;
+        this.blockSize = 5;
 
         this.stateDrawer = new StateDrawer();
 
@@ -87,13 +88,15 @@ class DfsDrawer
         this.data = new Uint8ClampedArray(this.imageData.data);
         this.modifiedImageData = new Uint8ClampedArray(this.imageData.data);
 
-        // Apply any filters here.
+        // Initialize image filter.
         this.imageFilter = new ImageFilter();
-        var pixelValue = 5;
-        this.imageFilter.pixelate(this.modifiedImageData, 5, this.width, this.height);
 
-        this.stateDrawer.addState(this.modifiedImageData, "pixelated w/ " + pixelValue);
-        this.stateDrawer.addState(this.modifiedImageData, "pixelated w/ " + pixelValue);
+        // Apply pixelation.
+        this.imageFilter.pixelate(this.modifiedImageData, this.blockSize, this.width, this.height);
+        var message = "pixelated w/ " + this.blockSize + "x" + this.blockSize + " blocks";
+        this.stateDrawer.addState(this.modifiedImageData, message);
+
+        // Apply edge filter.
 
 
         // Clear Canvas and Set image data to have white pixels.
