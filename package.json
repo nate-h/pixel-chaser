@@ -2,10 +2,6 @@
   "name": "Algorithmic-Drawing",
   "version": "1.0.0",
   "description": "Draws a picture using a graph traversal algorithm",
-  "main": "Gruntfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "Algorithmic",
     "Canvas",
@@ -13,16 +9,27 @@
     "DFS",
     "Depth-First Search"
   ],
-  "author": "",
-  "license": "UNLICENSED",
+  "author": "Nathanial Hapeman",
+  "dependencies": {},
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-sass": "^2.0.0",
-    "node-bourbon": "^4.2.3"
+    "browser-sync": "^2.11.1",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^4.1.0",
+    "gulp-cached": "^1.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-minify-css": "^1.2.3",
+    "gulp-minify-html": "^1.0.5",
+    "gulp-notify": "^3.1.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sass-lint": "^1.1.1",
+    "gulp-size": "^3.0.0",
+    "gulp-uglify": "^3.0.0",
+    "imagemin-pngquant": "^5.0.1",
+    "jshint": "^2.9.1"
   }
 }

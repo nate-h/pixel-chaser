@@ -37,9 +37,9 @@ class ImageFilter
         var pixelIndex = 0;
         var colors = 0;
 
-        for(xIter = 0; xIter < xItersMax; ++xIter)
+        for (xIter = 0; xIter < xItersMax; ++xIter)
         {
-            for(yIter = 0; yIter < yItersMax; ++yIter)
+            for (yIter = 0; yIter < yItersMax; ++yIter)
             {
                 // Calculate average pixel color for this block.
                 colorSum = {"r": 0, "g": 0, "b": 0 };
@@ -49,7 +49,7 @@ class ImageFilter
                 startingY = yIter * scale;
 
                 // for loop for getting color sum of all pixels for block.
-                for(blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
+                for (blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
                 {
                     // translate index to x, y coordinates.
                     blockXY = this.indexToXY(blockIndex, scale);
@@ -74,7 +74,7 @@ class ImageFilter
                 //console.log(averageColor);
 
                 // Set Colors for block to average color.
-                for(blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
+                for (blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
                 {
                     // translate index to x, y coordinates.
                     blockXY = this.indexToXY(blockIndex, scale);
@@ -123,7 +123,7 @@ class ImageFilter
 
     xyToIndex(x, y, width, height)
     {
-        if(x < 0 || y < 0 || x >= width || y >= height)
+        if (x < 0 || y < 0 || x >= width || y >= height)
             return -1;
         return x + y * width;
     }
@@ -132,7 +132,7 @@ class ImageFilter
     {
         var data = imageData;
 
-        for(var i = 0; i < data.length; i += 4)
+        for (var i = 0; i < data.length; i += 4)
         {
             var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
 
