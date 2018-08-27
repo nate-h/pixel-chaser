@@ -129,8 +129,15 @@ class PixelChaser {
         message = "gaussian w/ " + gKernel5 + " kernel";
         this.stateDrawer.addState(gaussianData5, message);
 
-        // Apply edge filter.
+        // Apply sobel filter.
+        let sobelKernal = "basic";
+        let sobelFilter = new SobelFilter(sobelKernal);
+        let sobelData = sobelFilter.run(
+            this.modifiedImageData, this.width, this.height);
+        message = "sobel w/ " + sobelKernal + " kernel";
+        this.stateDrawer.addState(sobelData, message);
 
+        console.log('sobelData', sobelData);
 
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();
@@ -253,7 +260,6 @@ class PixelChaser {
         }
         else {
             this.leadIndexes[iter] = this.findUnvisitedIndex();
-            //console.log('end new index: ', this.leadIndexes[iter]);
         }
     }
 

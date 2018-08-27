@@ -8,7 +8,6 @@ class StateDrawer {
     constructor() {
         var stateDrawerList = document.getElementById("stateDrawerList");
         stateDrawerList.style.width = "200px";
-        console.log(stateDrawerList);
         this.imageWidth = 200;
         this.imageHeight = 200;
     }

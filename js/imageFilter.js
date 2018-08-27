@@ -27,7 +27,7 @@ class ImageFilter {
         let intensityMap = new Uint8ClampedArray(width*height);
         for (var i = 0; i < width*height; i++) {
             let c = this.getColorsAtIndex(imageData, i);
-            var brightness = 0.34 * c[0] + 0.5 * c[1] + 0.16 * c[2];
+            var brightness = 0.34 * c.r + 0.5 * c.g + 0.16 * c.b;
             intensityMap[i] = brightness;
         }
 
@@ -72,10 +72,6 @@ class ImageFilter {
 
         for (x = 0; x < imgWidth; ++x) {
             for (y = 0; y < imgHeight; ++y) {
-
-                let centerIndex = this.xyToIndex(x, y, imgWidth, imgHeight);
-                let centerColors = this.getColorsAtIndex(imageData, centerIndex);
-                let centerKernelMult = kernel[kMid][kMid];
                 let sum = {"r": 0, "g": 0, "b": 0};
 
                 // Apply kernel to x,y
@@ -101,6 +97,47 @@ class ImageFilter {
                 sum.b *= finalMultiplier;
                 let pixelIndex = this.xyToIndex(x, y, imgWidth, imgHeight);
                 this.setColorsAtIndex(imageDataCopy, pixelIndex, sum);
+            }
+        }
+
+        return imageDataCopy;
+    }
+
+    convolve1D(imageData_1D, imgWidth, imgHeight, kernel, finalMultiplier=1.0) {
+        let imageDataCopy = new Uint8ClampedArray(imageData_1D);
+        let kLen = kernel.length;
+        let kMid = Math.floor(kernel.length/2);
+        let kMin = -kMid;
+        let kMax = kMid;
+        let x = 0;
+        let y = 0;
+        let kx = 0;
+        let ky = 0;
+
+        for (x = 0; x < imgWidth; ++x) {
+            for (y = 0; y < imgHeight; ++y) {
+
+                let sum = 0;
+
+                // Apply kernel to x,y
+                for (kx = kMin; kx <= kMax; ++kx) {
+                    for (ky = kMin; ky <= kMax; ++ky) {
+                        // Iterate over cells in kernel, and add their weighted values to sum.
+                        let weight = kernel[kx+kMid][ky+kMid];
+                        let tx = x + kx;
+                        let ty = y + ky;
+                        let cappedX = this.range(tx, 0, imgWidth -1);
+                        let cappedY = this.range(ty, 0, imgHeight -1);
+                        let kerIndex = this.xyToIndex(cappedX, cappedY, imgWidth, imgHeight);
+                        let kernelColor = imageData_1D[kerIndex];
+                        sum += kernelColor*weight;
+                    }
+                }
+
+                // Set sum
+                sum *= finalMultiplier;
+                let pixelIndex = this.xyToIndex(x, y, imgWidth, imgHeight);
+                imageDataCopy[pixelIndex] = sum;
             }
         }
 
