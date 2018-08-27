@@ -13,7 +13,8 @@
 
     "predef"        : [  // Custom globals.
         "ImageFilter",
-        "StateDrawer"
+        "StateDrawer",
+        "ImageData"
     ],
 
 

@@ -3,6 +3,7 @@ var gulp        = require('gulp'),
     rename      = require('gulp-rename'),
     cssmin      = require('gulp-minify-css'),
     concat      = require('gulp-concat'),
+    sourcemaps  = require('gulp-sourcemaps'),
     uglify      = require('gulp-uglify'),
     jshint      = require('gulp-jshint'),
     scsslint    = require('gulp-sass-lint'),
@@ -41,7 +42,7 @@ gulp.task('scss', function() {
     .pipe(cssmin())
     .pipe(size({ gzip: true, showFiles: true }))
     .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('dist/css'))
+    .pipe(gulp.dest('dist/css'));
 });
 
 gulp.task('browser-sync', function() {
@@ -59,11 +60,10 @@ gulp.task('deploy', function () {
 
 gulp.task('js', function() {
   gulp.src('js/*.js')
-    //.pipe(uglify()).on('error', function(e){
-    //    console.error(e);
-    //})
     .pipe(size({ gzip: true, showFiles: true }))
-    .pipe(concat('j.js'))
+    .pipe(sourcemaps.init())
+      .pipe(concat('j.js'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/js'))
     .pipe(reload({stream:true}));
 });

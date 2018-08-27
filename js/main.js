@@ -8,7 +8,9 @@ window.onload = function() {
     let pixelChaser = null;
     imageElement.src = "img/bridge.png";
     imageElement.onload = function() {
-        pixelChaser = new PixelChaser(imageElement);
+        let canvasIdName = "dfsDrawer";
+        let showDetails = true;
+        pixelChaser = new PixelChaser(canvasIdName, imageElement, showDetails);
         pixelChaser.draw();
     };
 };

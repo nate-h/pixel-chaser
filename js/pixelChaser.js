@@ -4,9 +4,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 class PixelChaser {
-    constructor(imageElement) {
+    constructor(canvasIdName, imageElement, showDetails) {
+
         // var declaration.
-        this.canvas = document.getElementById("dfsDrawer");
+        this.canvas = document.getElementById(canvasIdName);
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.blockSize = 5;
