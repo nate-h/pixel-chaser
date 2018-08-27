@@ -59,7 +59,15 @@ gulp.task('deploy', function () {
 });
 
 gulp.task('js', function() {
-  gulp.src('js/*.js')
+  gulp.src([
+      'js/main.js',
+      'js/imageFilter.js',
+      'js/gaussianFilter.js',
+      'js/grayScaleFilter.js',
+      'js/kernel.js',
+      'js/stateDrawer.js',
+      'js/pixelChaser.js'
+    ])
     .pipe(size({ gzip: true, showFiles: true }))
     .pipe(sourcemaps.init())
       .pipe(concat('j.js'))
