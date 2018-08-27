@@ -10,7 +10,7 @@ class SobelFilter extends ImageFilter {
 
         this.kernels = {
             "basic": {
-                "threshold": 0,
+                "threshold": 150,
                 "kernel_x": [
                     [1, 0, -1],
                     [2, 0, -2],
@@ -56,6 +56,7 @@ class SobelFilter extends ImageFilter {
             retImageData[realIndex + 0] = brightness;
             retImageData[realIndex + 1] = brightness;
             retImageData[realIndex + 2] = brightness;
+            retImageData[realIndex + 3] = 255;
         }
 
         return retImageData;
