@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-// dfsDrawer.js
+// PixelChaser.js
 // Description: Draws image using dfs algorithm.
 ////////////////////////////////////////////////////////////////////////////////
 
-class DfsDrawer {
+class PixelChaser {
     constructor(imageElement) {
         // var declaration.
         this.canvas = document.getElementById("dfsDrawer");

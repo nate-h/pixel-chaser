@@ -8,16 +8,14 @@
 // For pixelation algorithm look up:
 // https://stackoverflow.com/questions/4047031/help-with-the-theory-behind-a-pixelate-algorithm
 
-class ImageFilter
-{
-    constructor()
-    {
+class ImageFilter {
+
+    constructor() {
 
     }
 
     // Note: scale value needs to divide evenly into width, height
-    pixelate(imageData, scale, width, height)
-    {
+    pixelate(imageData, scale, width, height) {
         console.log("Pixelate!");
         var targetPixelIndexes = [];
         var xItersMax = width/scale;
@@ -37,10 +35,8 @@ class ImageFilter
         var pixelIndex = 0;
         var colors = 0;
 
-        for (xIter = 0; xIter < xItersMax; ++xIter)
-        {
-            for (yIter = 0; yIter < yItersMax; ++yIter)
-            {
+        for (xIter = 0; xIter < xItersMax; ++xIter) {
+            for (yIter = 0; yIter < yItersMax; ++yIter) {
                 // Calculate average pixel color for this block.
                 colorSum = {"r": 0, "g": 0, "b": 0 };
                 averageColor = {"r": 0, "g": 0, "b": 0 };
@@ -49,8 +45,7 @@ class ImageFilter
                 startingY = yIter * scale;
 
                 // for loop for getting color sum of all pixels for block.
-                for (blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
-                {
+                for (blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex) {
                     // translate index to x, y coordinates.
                     blockXY = this.indexToXY(blockIndex, scale);
                     blockX = startingX + blockXY.x;
@@ -64,8 +59,7 @@ class ImageFilter
                     colorSum.b += colors.b;
                 }
 
-                averageColor =
-                {
+                averageColor = {
                     "r": colorSum.r/numPixelPerBlock,
                     "g": colorSum.g/numPixelPerBlock,
                     "b": colorSum.b/numPixelPerBlock,
@@ -74,8 +68,7 @@ class ImageFilter
                 //console.log(averageColor);
 
                 // Set Colors for block to average color.
-                for (blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex)
-                {
+                for (blockIndex = 0; blockIndex < numPixelPerBlock; ++blockIndex) {
                     // translate index to x, y coordinates.
                     blockXY = this.indexToXY(blockIndex, scale);
                     blockX = startingX + blockXY.x;
@@ -91,13 +84,11 @@ class ImageFilter
 
     // A filter for making edges much darker so they have a higher
     // probability of being proccessed.
-    edgeDarkening()
-    {
+    edgeDarkening() {
         // use a Canny edge detector?
     }
 
-    getColorsAtIndex(imageData, index)
-    {
+    getColorsAtIndex(imageData, index) {
         var realIndex = index*4;
         var r = imageData[realIndex + 0];
         var g = imageData[realIndex + 1];
@@ -105,35 +96,31 @@ class ImageFilter
         return {"r": r, "g": g, "b": b };
     }
 
-    setColorsAtIndex(imageData, index, colors)
-    {
+    setColorsAtIndex(imageData, index, colors) {
         var realIndex = index*4;
         imageData[realIndex + 0] = colors.r;
         imageData[realIndex + 1] = colors.g;
         imageData[realIndex + 2] = colors.b;
     }
 
-    indexToXY(index, width)
-    {
+    indexToXY(index, width) {
         return {
             "x": index % width,
             "y": Math.floor(index / width)
         };
     }
 
-    xyToIndex(x, y, width, height)
-    {
-        if (x < 0 || y < 0 || x >= width || y >= height)
+    xyToIndex(x, y, width, height) {
+        if (x < 0 || y < 0 || x >= width || y >= height) {
             return -1;
+        }
         return x + y * width;
     }
 
-    grayScale(imageData)
-    {
+    grayScale(imageData) {
         var data = imageData;
 
-        for (var i = 0; i < data.length; i += 4)
-        {
+        for (var i = 0; i < data.length; i += 4) {
             var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
 
             data[i] = brightness;      // red

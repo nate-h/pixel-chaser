@@ -3,10 +3,9 @@
 // Description: Draws intermediate canvas states in a seperate list.
 ////////////////////////////////////////////////////////////////////////////////
 
-class StateDrawer
-{
-    constructor()
-    {
+class StateDrawer {
+
+    constructor() {
         var stateDrawerList = document.getElementById("stateDrawerList");
         stateDrawerList.style.width = "200px";
         console.log(stateDrawerList);
@@ -14,8 +13,7 @@ class StateDrawer
         this.imageHeight = 200;
     }
 
-    addState(imageDataData, message)
-    {
+    addState(imageDataData, message) {
         var stateDrawerList = document.getElementById("stateDrawerList");
         var li = document.createElement("li");
         var messageSpan = document.createElement("span");
@@ -26,8 +24,7 @@ class StateDrawer
         stateDrawerList.appendChild(li);
     }
 
-    createCanvas(imageDataData)
-    {
+    createCanvas(imageDataData) {
         var canvas = document.createElement('canvas');
 
         canvas.id = "CursorLayer";
