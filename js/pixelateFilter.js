@@ -5,20 +5,19 @@
 
 class PixelateFilter extends ImageFilter {
 
-    constructor(imageData, scale, width, height) {
+    constructor(scale) {
         super();
-        this.imageData = imageData;
+
         this.scale = scale;
-        this.width = width;
-        this.height = height;
     }
 
-    // Note: scale value needs to divide evenly into width, height
-    run() {
-        console.log("Pixelating!");
+    // Note: this.scale value needs to divide evenly into width, height
+    run(imageData, width, height) {
+        let retData = new Uint8ClampedArray(imageData);
+
         var targetPixelIndexes = [];
-        var xItersMax = this.width/this.scale;
-        var yItersMax = this.height/this.scale;
+        var xItersMax = width/this.scale;
+        var yItersMax = height/this.scale;
         var numPixelPerBlock = this.scale * this.scale;
         var xIter = 0;
         var yIter = 0;
@@ -50,8 +49,8 @@ class PixelateFilter extends ImageFilter {
                     blockX = startingX + blockXY.x;
                     blockY = startingY + blockXY.y;
 
-                    pixelIndex = this.xyToIndex(blockX, blockY, this.width, this.height);
-                    colors = this.getColorsAtIndex(this.imageData, pixelIndex);
+                    pixelIndex = this.xyToIndex(blockX, blockY, width, height);
+                    colors = this.getColorsAtIndex(retData, pixelIndex);
 
                     colorSum.r += colors.r;
                     colorSum.g += colors.g;
@@ -71,10 +70,12 @@ class PixelateFilter extends ImageFilter {
                     blockX = startingX + blockXY.x;
                     blockY = startingY + blockXY.y;
 
-                    pixelIndex = this.xyToIndex(blockX, blockY, this.width, this.height);
-                    this.setColorsAtIndex(this.imageData, pixelIndex, averageColor);
+                    pixelIndex = this.xyToIndex(blockX, blockY, width, height);
+                    this.setColorsAtIndex(retData, pixelIndex, averageColor);
                 }
             }
         }
+
+        return retData;
     }
 }

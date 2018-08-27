@@ -102,13 +102,32 @@ class PixelChaser {
         this.data = new Uint8ClampedArray(this.imageData.data);
         this.modifiedImageData = new Uint8ClampedArray(this.imageData.data);
 
-        // Initialize image filter.
-        let pixelateFilter = new PixelateFilter(this.modifiedImageData, this.blockSize, this.width, this.height);
+        // Raw Image.
+        let message = "raw image";
+        this.stateDrawer.addState(this.modifiedImageData, message);
 
         // Apply pixelation.
-        pixelateFilter.run();
-        var message = "pixelated w/ " + this.blockSize + "x" + this.blockSize + " blocks";
-        this.stateDrawer.addState(this.modifiedImageData, message);
+        let pixelateFilter = new PixelateFilter(this.blockSize);
+        let pixelatedData = pixelateFilter.run(
+            this.modifiedImageData, this.width, this.height);
+        message = "pixelated w/ " + this.blockSize + "x" + this.blockSize + " blocks";
+        this.stateDrawer.addState(pixelatedData, message);
+
+        // Apply gaussian.
+        let gKernel = "3x3";
+        let gaussianFilter = new GaussianFilter(gKernel);
+        let gaussianData = gaussianFilter.run(
+            this.modifiedImageData, this.width, this.height);
+        message = "gaussian w/ " + gKernel + " kernel";
+        this.stateDrawer.addState(gaussianData, message);
+
+        // Apply gaussian.
+        let gKernel5 = "5x5";
+        let gaussianFilter5 = new GaussianFilter(gKernel5);
+        let gaussianData5 = gaussianFilter5.run(
+            this.modifiedImageData, this.width, this.height);
+        message = "gaussian w/ " + gKernel5 + " kernel";
+        this.stateDrawer.addState(gaussianData5, message);
 
         // Apply edge filter.
 
@@ -116,8 +135,9 @@ class PixelChaser {
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();
 
-        for (var pixelIndex in this.imageData.data)
+        for (var pixelIndex in this.imageData.data) {
             this.imageData.data[pixelIndex] = 255;
+        }
     }
 
     // Creates arrays for visited status and for backtracing.
