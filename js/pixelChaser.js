@@ -3,26 +3,37 @@
 // Description: Draws image using dfs algorithm.
 ////////////////////////////////////////////////////////////////////////////////
 
-class PixelChaser {
-    constructor(canvasIdName, imageElement, showDetails) {
+// Define this:
+// let settings = {
+//     canvasElementId: "dfsDrawer",
+//     debug: true,
+//     blockSize: 5,
+//     fps: 40,
+//     loopRepeat: 55,
+// };
 
-        // var declaration.
-        this.canvas = document.getElementById(canvasIdName);
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
-        this.blockSize = 5;
+class PixelChaser {
+    constructor(imageElement, settings) {
+
+        // transfer over settings.
+        this.canvasElementId = this.getValue(settings, 'canvasElementId', null);
+        this.fps = this.getValue(settings, 'fps', 40);
+        this.debug = this.getValue(settings, 'debug', true);
+        this.blockSize = this.getValue(settings, 'blockSize', 5);
+        this.loopRepeat = this.getValue(settings, 'loopRepeat', 50);
+
 
         this.stateDrawer = new StateDrawer();
-
+        this.canvas = document.getElementById(this.canvasElementId);
         this.canvas.addEventListener('click', this.onClick.bind(this));
 
         this.imageElement = imageElement;
         this.imgW = this.imageElement.width;
         this.imgH = this.imageElement.height;
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
 
         this.timerID = null;
-        this.fps = 40;
-        this.loopRepeat = 55;
         this.numPixels = this.canvas.width * this.canvas.height;
 
         this.nodeStates = {
@@ -57,8 +68,17 @@ class PixelChaser {
         this.clearRect();
 
         // Paint imagedata white.
-        for (var pixelIndex in this.imageData.data)
+        for (var pixelIndex in this.imageData.data) {
             this.imageData.data[pixelIndex] = 255;
+        }
+    }
+
+    getValue(obj, key, defVal) {
+        if (obj.hasOwnProperty(key)) {
+            return obj[key];
+        }
+
+        return defVal;
     }
 
     onClick() {

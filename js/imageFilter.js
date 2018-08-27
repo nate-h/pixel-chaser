@@ -16,7 +16,7 @@ class ImageFilter {
 
     // Note: scale value needs to divide evenly into width, height
     pixelate(imageData, scale, width, height) {
-        console.log("Pixelate!");
+        console.log("Pixelating!");
         var targetPixelIndexes = [];
         var xItersMax = width/scale;
         var yItersMax = height/scale;
