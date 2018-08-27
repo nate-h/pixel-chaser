@@ -62,6 +62,7 @@ gulp.task('js', function() {
   gulp.src([
       'js/main.js',
       'js/imageFilter.js',
+      'js/pixelateFilter.js',
       'js/gaussianFilter.js',
       'js/grayScaleFilter.js',
       'js/kernel.js',

@@ -103,10 +103,10 @@ class PixelChaser {
         this.modifiedImageData = new Uint8ClampedArray(this.imageData.data);
 
         // Initialize image filter.
-        this.imageFilter = new ImageFilter();
+        let pixelateFilter = new PixelateFilter(this.modifiedImageData, this.blockSize, this.width, this.height);
 
         // Apply pixelation.
-        this.imageFilter.pixelate(this.modifiedImageData, this.blockSize, this.width, this.height);
+        pixelateFilter.run();
         var message = "pixelated w/ " + this.blockSize + "x" + this.blockSize + " blocks";
         this.stateDrawer.addState(this.modifiedImageData, message);
 
