@@ -27,7 +27,8 @@ class ImageFilter {
         let intensityMap = new Uint8ClampedArray(width*height);
         for (var i = 0; i < width*height; i++) {
             let c = this.getColorsAtIndex(imageData, i);
-            var brightness = 0.34 * c.r + 0.5 * c.g + 0.16 * c.b;
+            //var brightness = 0.34 * c.r + 0.5 * c.g + 0.16 * c.b;
+            var brightness = (c.r + c.g + c.b)/3;
             intensityMap[i] = brightness;
         }
 

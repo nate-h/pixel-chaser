@@ -106,13 +106,6 @@ class PixelChaser {
         let message = "raw image";
         this.stateDrawer.addState(this.modifiedImageData, message);
 
-        // Apply pixelation.
-        let pixelateFilter = new PixelateFilter(this.blockSize);
-        let pixelatedData = pixelateFilter.run(
-            this.modifiedImageData, this.width, this.height);
-        message = "pixelated w/ " + this.blockSize + "x" + this.blockSize + " blocks";
-        this.stateDrawer.addState(pixelatedData, message);
-
         // Apply gaussian.
         let gKernel = "3x3";
         let gaussianFilter = new GaussianFilter(gKernel);
@@ -121,23 +114,21 @@ class PixelChaser {
         message = "gaussian w/ " + gKernel + " kernel";
         this.stateDrawer.addState(gaussianData, message);
 
-        // Apply gaussian.
-        let gKernel5 = "5x5";
-        let gaussianFilter5 = new GaussianFilter(gKernel5);
-        let gaussianData5 = gaussianFilter5.run(
-            this.modifiedImageData, this.width, this.height);
-        message = "gaussian w/ " + gKernel5 + " kernel";
-        this.stateDrawer.addState(gaussianData5, message);
-
         // Apply sobel filter.
         let sobelKernal = "basic";
-        let sobelFilter = new SobelFilter(sobelKernal);
+        let threshold = 100;
+        let sobelFilter = new SobelFilter(sobelKernal, threshold);
         let sobelData = sobelFilter.run(
             this.modifiedImageData, this.width, this.height);
         message = "sobel w/ " + sobelKernal + " kernel";
         this.stateDrawer.addState(sobelData, message);
 
-        console.log('sobelData', sobelData);
+        // Apply sobel filter w/ gaussian.
+        let sobelFilterWG = new SobelFilter(sobelKernal, threshold);
+        let sobelDataWG = sobelFilterWG.run(
+            gaussianData, this.width, this.height);
+        message = "sobel w/ " + sobelKernal + " kernel + gaussian 5x5";
+        this.stateDrawer.addState(sobelDataWG, message);
 
         // Clear Canvas and Set image data to have white pixels.
         this.clearRect();

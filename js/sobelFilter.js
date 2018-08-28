@@ -5,12 +5,12 @@
 
 class SobelFilter extends ImageFilter {
 
-    constructor(kernelOperator) {
+    constructor(kernelOperator, threshold) {
         super();
 
+        this.threshold = threshold;
         this.kernels = {
             "basic": {
-                "threshold": 150,
                 "kernel_x": [
                     [1, 0, -1],
                     [2, 0, -2],
@@ -20,6 +20,18 @@ class SobelFilter extends ImageFilter {
                     [1, 2, 1],
                     [0, 0, 0],
                     [-1, -2, -1]
+                ]
+            },
+            "basic2": {
+                "kernel_x": [
+                    [3, 0, -3],
+                    [10, 0, -10],
+                    [3, 0, -3]
+                ],
+                "kernel_y": [
+                    [3, 10, 3],
+                    [0, 0, 0],
+                    [-3, -10, -3]
                 ]
             }
         };
@@ -37,7 +49,6 @@ class SobelFilter extends ImageFilter {
     run(imageData, imgWidth, imgHeight) {
         let kernel_x = this.kernels[this.kernelOperator].kernel_x;
         let kernel_y = this.kernels[this.kernelOperator].kernel_y;
-        let threshold = this.kernels[this.kernelOperator].threshold;
         let intensityMap = this.getIntensityMap(imageData, imgWidth, imgHeight);
         let convolvedData_x = this.convolve1D(intensityMap, imgWidth, imgHeight, kernel_x);
         let convolvedData_y = this.convolve1D(intensityMap, imgWidth, imgHeight, kernel_y);
@@ -48,7 +59,7 @@ class SobelFilter extends ImageFilter {
             let brightness_x = convolvedData_x[i];
             let brightness_y = convolvedData_y[i];
             let brightness = Math.sqrt(brightness_x*brightness_x + brightness_y*brightness_y);
-            if (brightness < threshold) {
+            if (brightness < this.threshold) {
                 brightness = 0;
             }
 
