@@ -63,11 +63,8 @@ class SobelFilter extends ImageFilter {
                 brightness = 0;
             }
 
-            var realIndex = i*4;
-            retImageData[realIndex + 0] = brightness;
-            retImageData[realIndex + 1] = brightness;
-            retImageData[realIndex + 2] = brightness;
-            retImageData[realIndex + 3] = 255;
+            let finalRGB = {'r':brightness, 'g':brightness, 'b': brightness};
+            this.setColorsAtIndex(retImageData, i, finalRGB);
         }
 
         return retImageData;

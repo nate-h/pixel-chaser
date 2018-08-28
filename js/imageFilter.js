@@ -40,6 +40,7 @@ class ImageFilter {
         imageData[realIndex + 0] = colors.r;
         imageData[realIndex + 1] = colors.g;
         imageData[realIndex + 2] = colors.b;
+        imageData[realIndex + 3] = 255;
     }
 
     indexToXY(index, width) {

@@ -106,6 +106,14 @@ class PixelChaser {
         let message = "raw image";
         this.stateDrawer.addState(this.modifiedImageData, message);
 
+        // Apply color rounding filter.
+        let bins = 18;
+        let colorRoundingFilter = new ColorRoundingFilter(bins);
+        let colorRoundingData = colorRoundingFilter.run(
+            this.modifiedImageData, this.width, this.height);
+        message = "Color Rounding w/ " + bins + " bins";
+        this.stateDrawer.addState(colorRoundingData, message);
+
         // Apply gaussian.
         let gKernel = "3x3";
         let gaussianFilter = new GaussianFilter(gKernel);

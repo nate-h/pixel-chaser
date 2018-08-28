@@ -64,6 +64,7 @@ gulp.task('js', function() {
       'js/imageFilter.js',
       'js/pixelateFilter.js',
       'js/gaussianFilter.js',
+      'js/colorRoundingFilter.js',
       'js/grayScaleFilter.js',
       'js/sobelFilter.js',
       'js/kernel.js',
