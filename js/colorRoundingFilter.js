@@ -19,26 +19,38 @@ class ColorRoundingFilter extends ImageFilter {
 
         let idx;
         let imageDataCopy = new Uint8ClampedArray(4 * imgWidth * imgHeight);
+        let delta = 1/(this.bins - 1);
 
         for (idx = 0; idx < imgWidth*imgHeight; ++idx) {
-
             let c = this.getColorsAtIndex(imageData, idx);
+            let hsv = this.rgbToHsv(c);
 
-            this.setColorsAtIndex(imageDataCopy, idx, c);
+            //console.log('hsv.h', hsv.h);
+            let roundedH = delta*Math.round(hsv.h/delta);
+            hsv.h = roundedH;
+            let rgb = this.hsvToRgb(hsv);
+
+            //console.log('hsv.h', hsv.h);
+
+            //debugger;
+
+            this.setColorsAtIndex(imageDataCopy, idx, rgb);
         }
 
         return imageDataCopy;
     }
 
 
-    rgbToHsv(r, g, b) {
-        r /= 255; g /= 255, b /= 255;
+    rgbToHsv(rgb) {
+        let r = rgb.r/255;
+        let g = rgb.g/255;
+        let b = rgb.b/255;
 
         let max = Math.max(r, g, b);
         let min = Math.min(r, g, b);
         let h, s, v = max;
 
-        var d = max - min;
+        let d = max - min;
         s = max === 0 ? 0 : d / max;
 
         if (max === min) {
@@ -53,17 +65,20 @@ class ColorRoundingFilter extends ImageFilter {
             h /= 6;
         }
 
-        return [h, s, v];
+        return {'h': h, 's': s, 'v': v};
     }
 
-    hsvToRgb(h, s, v) {
-        var r, g, b;
+    hsvToRgb(hsv) {
+        let h = hsv.h;
+        let s = hsv.s;
+        let v = hsv.v;
+        let r, g, b;
 
-        var i = Math.floor(h * 6);
-        var f = h * 6 - i;
-        var p = v * (1 - s);
-        var q = v * (1 - f * s);
-        var t = v * (1 - (1 - f) * s);
+        let i = Math.floor(h * 6);
+        let f = h * 6 - i;
+        let p = v * (1 - s);
+        let q = v * (1 - f * s);
+        let t = v * (1 - (1 - f) * s);
 
         switch (i % 6) {
             case 0: r = v, g = t, b = p;
@@ -80,6 +95,6 @@ class ColorRoundingFilter extends ImageFilter {
                 break;
         }
 
-        return [r * 255, g * 255, b * 255];
+        return {'r': r * 255, 'g': g * 255, 'b': b * 255};
     }
 }

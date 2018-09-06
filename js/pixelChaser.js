@@ -107,7 +107,7 @@ class PixelChaser {
         this.stateDrawer.addState(this.modifiedImageData, message);
 
         // Apply color rounding filter.
-        let bins = 18;
+        let bins = 10;
         let colorRoundingFilter = new ColorRoundingFilter(bins);
         let colorRoundingData = colorRoundingFilter.run(
             this.modifiedImageData, this.width, this.height);
