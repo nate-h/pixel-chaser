@@ -5,15 +5,16 @@ SRC := webapp/
 
 
 install:
+	# Install gulp globally.
+	# npm install gulp-cli -g
+	# Install dependency for a gulp package.
+	# sudo apt-get install libpng-dev
 	npm install
 
-build:
+dev:
 	@echo "Now Building Files!"
-	grunt
+	gulp
 
-watch: build
-	grunt watch
-
-clean:
-	@echo "Removing auto-generated files."
-	grunt clean
+#clean:
+	#@echo "Removing auto-generated files."
+	#grunt clean

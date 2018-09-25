@@ -12,7 +12,7 @@
   "author": "Nathanial Hapeman",
   "dependencies": {},
   "devDependencies": {
-    "browser-sync": "^2.11.1",
+    "browser-sync": "^2.24.7",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^4.1.0",
     "gulp-cached": "^1.1.0",

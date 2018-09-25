@@ -1,6 +1,9 @@
 # Algorithmic Drawing
 Draws pictures using algorithms
 
+# On running the program.
+  * install gulp
+
 
 ## Based on
 The idea for this came from this https://www.michaelbromley.co.uk/experiments/chromata/
