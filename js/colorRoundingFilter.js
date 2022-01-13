@@ -10,8 +10,9 @@
 
 
 class ColorRoundingFilter extends ImageFilter {
+
     constructor(bins) {
-        super()
+        super();
         this.bins = bins;
     }
 
@@ -19,22 +20,16 @@ class ColorRoundingFilter extends ImageFilter {
 
         let idx;
         let imageDataCopy = new Uint8ClampedArray(4 * imgWidth * imgHeight);
-        let delta = 1/(this.bins - 1);
 
         for (idx = 0; idx < imgWidth*imgHeight; ++idx) {
             let c = this.getColorsAtIndex(imageData, idx);
-            let hsv = this.rgbToHsv(c);
+            let delta = 255/this.bins;
 
-            //console.log('hsv.h', hsv.h);
-            let roundedH = delta*Math.round(hsv.h/delta);
-            hsv.h = roundedH;
-            let rgb = this.hsvToRgb(hsv);
+            c.r = delta * Math.round(c.r/delta);
+            c.g = delta * Math.round(c.g/delta);
+            c.b = delta * Math.round(c.b/delta);
 
-            //console.log('hsv.h', hsv.h);
-
-            //debugger;
-
-            this.setColorsAtIndex(imageDataCopy, idx, rgb);
+            this.setColorsAtIndex(imageDataCopy, idx, c);
         }
 
         return imageDataCopy;

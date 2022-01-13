@@ -10,6 +10,7 @@
 //     blockSize: 5,
 //     fps: 40,
 //     loopRepeat: 55,
+//     roots: 5,         // How many dfs algorithms are running concurrently.
 // };
 
 class PixelChaser {
@@ -21,9 +22,13 @@ class PixelChaser {
         this.debug = this.getValue(settings, 'debug', true);
         this.blockSize = this.getValue(settings, 'blockSize', 5);
         this.loopRepeat = this.getValue(settings, 'loopRepeat', 50);
+        this.roots = this.getValue(settings, 'roots', 5);
 
 
+        // Initialize State drawer. This draws intermediate steps.
         this.stateDrawer = new StateDrawer();
+
+        // Add on click event.
         this.canvas = document.getElementById(this.canvasElementId);
         this.canvas.addEventListener('click', this.onClick.bind(this));
 
@@ -106,14 +111,6 @@ class PixelChaser {
         let message = "raw image";
         this.stateDrawer.addState(this.modifiedImageData, message);
 
-        // Apply color rounding filter.
-        let bins = 10;
-        let colorRoundingFilter = new ColorRoundingFilter(bins);
-        let colorRoundingData = colorRoundingFilter.run(
-            this.modifiedImageData, this.width, this.height);
-        message = "Color Rounding w/ " + bins + " bins";
-        this.stateDrawer.addState(colorRoundingData, message);
-
         // Apply gaussian.
         let gKernel = "3x3";
         let gaussianFilter = new GaussianFilter(gKernel);
@@ -122,12 +119,20 @@ class PixelChaser {
         message = "gaussian w/ " + gKernel + " kernel";
         this.stateDrawer.addState(gaussianData, message);
 
+        // Apply color rounding filter.
+        let colorBins = 10;
+        let colorRoundingFilter = new ColorRoundingFilter(colorBins);
+        let colorRoundingData = colorRoundingFilter.run(
+            gaussianData, this.width, this.height);
+        message = `Color Rounding w/ ${colorBins} bins`;
+        this.stateDrawer.addState(colorRoundingData, message);
+
         // Apply sobel filter.
         let sobelKernal = "basic";
-        let threshold = 100;
+        let threshold = 70;
         let sobelFilter = new SobelFilter(sobelKernal, threshold);
         let sobelData = sobelFilter.run(
-            this.modifiedImageData, this.width, this.height);
+            colorRoundingData, this.width, this.height);
         message = "sobel w/ " + sobelKernal + " kernel";
         this.stateDrawer.addState(sobelData, message);
 
@@ -135,7 +140,7 @@ class PixelChaser {
         let sobelFilterWG = new SobelFilter(sobelKernal, threshold);
         let sobelDataWG = sobelFilterWG.run(
             gaussianData, this.width, this.height);
-        message = "sobel w/ " + sobelKernal + " kernel + gaussian 5x5";
+        message = "sobel w/ " + sobelKernal + " kernel + gaussian 3x3";
         this.stateDrawer.addState(sobelDataWG, message);
 
         // Clear Canvas and Set image data to have white pixels.
